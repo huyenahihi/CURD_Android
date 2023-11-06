@@ -1,6 +1,7 @@
-package com.example.ja2;
+package com.example.ja2.ui.main;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Patterns;
@@ -20,9 +21,11 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.ja2.R;
 import com.example.ja2.adapter.ContactsAdapter;
 import com.example.ja2.db.DatabaseHelper;
 import com.example.ja2.db.entity.Contact;
+import com.example.ja2.ui.detail.ContactActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -53,7 +56,10 @@ public class MainActivity extends AppCompatActivity implements ContactsAdapter.O
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(contactsAdapter);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(view -> addAndEditContacts(false, null, -1));
+        fab.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivity.this, ContactActivity.class);
+            startActivity(intent);
+        });
     }
 
     public void addAndEditContacts(final boolean isUpdated, final Contact contact, final int position) {
@@ -108,7 +114,6 @@ public class MainActivity extends AppCompatActivity implements ContactsAdapter.O
         contactsAdapter.notifyDataSetChanged();
     }
 
-
     private void updateContact(String name, String email, int position) {
         Contact contact = contactArrayList.get(position);
         contact.setName(name);
@@ -147,6 +152,10 @@ public class MainActivity extends AppCompatActivity implements ContactsAdapter.O
 
     @Override
     public void onItemClickListener(int position, Contact contact) {
-        addAndEditContacts(true, contact, position);
+        Intent intent = new Intent(MainActivity.this, ContactActivity.class);
+        if (contact != null) {
+            intent.putExtra(Contact.DATA_CONTACT, contact);
+        }
+        startActivity(intent);
     }
 }

@@ -31,7 +31,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.MyView
     @Override
     public ContactsAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // Nạp layout cho View biểu diễn phần tử cu the
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.contact_list_item, parent, false);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_contact, parent, false);
         return new MyViewHolder(itemView);
     }
 
@@ -47,7 +47,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.MyView
                 callBack.onItemClickListener(holder.getAdapterPosition(), contact));
     }
 
-    //cho biết số phần tử của dữ liệu
+    // cho biết số phần tử của dữ liệu
     @Override
     public int getItemCount() {
         return contactsList.size();
