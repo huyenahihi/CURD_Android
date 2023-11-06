@@ -14,4 +14,11 @@
     <string name="title_edit_contact_screen">Update contact</string>
     <string name="hint_input_user_name">UserName</string>
     <string name="hint_input_email">Email</string>
+    <string name="toast_message_create_contact_successful">Create contact successful</string>
+    <string name="toast_message_remove_contact_successful">Remove account successful</string>
+    <string name="toast_message_update_contact_successful">Update contact successful</string>
+    <string name="title_dialog_confirm">Confirm dialog</string>
+    <string name="message_dialog_confirm">Do you want to save data?</string>
+    <string name="button_confirm">Save</string>
+    <string name="button_cancel">Cancel</string>
 </resources>

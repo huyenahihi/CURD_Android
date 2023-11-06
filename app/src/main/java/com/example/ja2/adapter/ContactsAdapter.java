@@ -53,6 +53,21 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.MyView
         return contactsList.size();
     }
 
+    public void removeItem(int position) {
+        contactsList.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    public void updatePosition(int position, Contact contact) {
+        contactsList.set(position, contact);
+        notifyItemChanged(position);
+    }
+
+    public void addTheFirsItem(Contact contact) {
+        contactsList.add(0, contact);
+        notifyItemInserted(0);
+    }
+
     public interface OnItemClickListener {
         void onItemClickListener(int position, Contact contact);
     }

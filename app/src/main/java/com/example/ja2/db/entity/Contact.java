@@ -24,6 +24,11 @@ public class Contact implements Parcelable {
 
     }
 
+    public Contact(String name, String email){
+        this.name = name;
+        this.email = email;
+    }
+
     public Contact(String name, String email, int id){
         this.name = name;
         this.email = email;

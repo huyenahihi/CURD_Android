@@ -1,9 +1,17 @@
 package com.example.ja2.ui.main;
 
+import static com.example.ja2.ui.detail.ContactActivity.ADD_CONTACT;
+import static com.example.ja2.ui.detail.ContactActivity.DATA_POSITION;
+import static com.example.ja2.ui.detail.ContactActivity.REMOVE_CONTACT;
+import static com.example.ja2.ui.detail.ContactActivity.UPDATE_CONTACT;
+
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -13,6 +21,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,6 +44,27 @@ public class MainActivity extends AppCompatActivity implements ContactsAdapter.O
 
     private final ArrayList<Contact> contactArrayList = new ArrayList<>();
     private ContactsAdapter contactsAdapter;
+    @SuppressLint("NewApi")
+    ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+        if (result.getResultCode() == Activity.RESULT_OK) {
+            Intent intent = result.getData();
+            String action = intent.getAction();
+            if (action.equals(ADD_CONTACT)) {
+                Contact contact = intent.getParcelableExtra(Contact.DATA_CONTACT, Contact.class);
+                contactsAdapter.addTheFirsItem(contact);
+                Toast.makeText(MainActivity.this, R.string.toast_message_create_contact_successful, Toast.LENGTH_LONG).show();
+            } else if (action.equals(REMOVE_CONTACT)) {
+                int position = intent.getIntExtra(DATA_POSITION, -1);
+                contactsAdapter.removeItem(position);
+                Toast.makeText(MainActivity.this, R.string.toast_message_remove_contact_successful, Toast.LENGTH_LONG).show();
+            } else if (action.equals(UPDATE_CONTACT)) {
+                int position = intent.getIntExtra(DATA_POSITION, -1);
+                Contact contact = intent.getParcelableExtra(Contact.DATA_CONTACT, Contact.class);
+                contactsAdapter.updatePosition(position, contact);
+                Toast.makeText(MainActivity.this, R.string.toast_message_update_contact_successful, Toast.LENGTH_LONG).show();
+            }
+        }
+    });
     private RecyclerView recyclerView;
     private DatabaseHelper db;
 
@@ -58,80 +89,8 @@ public class MainActivity extends AppCompatActivity implements ContactsAdapter.O
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(view -> {
             Intent intent = new Intent(MainActivity.this, ContactActivity.class);
-            startActivity(intent);
+            mStartForResult.launch(intent);
         });
-    }
-
-    public void addAndEditContacts(final boolean isUpdated, final Contact contact, final int position) {
-        LayoutInflater layoutInflater = LayoutInflater.from(getApplicationContext());
-        View view = layoutInflater.inflate(R.layout.layout_add_contact, null);
-        AlertDialog.Builder alerDialogBuilder = new AlertDialog.Builder(MainActivity.this);
-        alerDialogBuilder.setView(view);
-        TextView contactTitle = view.findViewById(R.id.new_contact_title);
-        final EditText newContact = view.findViewById(R.id.name);
-        final EditText contactEmail = view.findViewById(R.id.email);
-        contactTitle.setText(!isUpdated ? "Add New Contact" : "Edit Contact");
-        if (isUpdated && contact != null) {
-            newContact.setText(contact.getName());
-            contactEmail.setText(contact.getEmail());
-        }
-        alerDialogBuilder.setCancelable(false)
-
-                .setPositiveButton(isUpdated ? "Update" : "Save", new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        String name = newContact.getText().toString().trim();
-                        String email = contactEmail.getText().toString().trim();
-                        if (TextUtils.isEmpty(name) || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                            Toast.makeText(MainActivity.this, R.string.validate_form_input_contact, Toast.LENGTH_LONG).show();
-                        } else {
-                            if (isUpdated && contact != null) {
-                                updateContact(name, email, position);
-                            } else {
-                                createContact(name, email);
-                            }
-                        }
-                    }
-                }).setNegativeButton(isUpdated ? "Delete" : "Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        if (isUpdated) {
-                            DeleteContact(contact, position);
-                        } else {
-                            dialogInterface.cancel();
-                        }
-                    }
-                });
-
-        final AlertDialog alertDialog = alerDialogBuilder.create();
-        alertDialog.show();
-    }
-
-    private void DeleteContact(Contact contact, int position) {
-        contactArrayList.remove(position);
-        db.deleteContact(contact);
-        contactsAdapter.notifyDataSetChanged();
-    }
-
-    private void updateContact(String name, String email, int position) {
-        Contact contact = contactArrayList.get(position);
-        contact.setName(name);
-        contact.setEmail(email);
-        db.updateContact(contact);
-        contactArrayList.set(position, contact);
-        contactsAdapter.notifyDataSetChanged();
-    }
-
-
-    private void createContact(String name, String email) {
-        long id = db.insertContact(name, email);
-        Contact contact = db.getContact(id);
-        if (contact != null) {
-            contactArrayList.add(0, contact);
-            contactsAdapter.notifyDataSetChanged();
-        }
-
     }
 
     // Menu bar
@@ -154,8 +113,9 @@ public class MainActivity extends AppCompatActivity implements ContactsAdapter.O
     public void onItemClickListener(int position, Contact contact) {
         Intent intent = new Intent(MainActivity.this, ContactActivity.class);
         if (contact != null) {
+            intent.putExtra(DATA_POSITION, position);
             intent.putExtra(Contact.DATA_CONTACT, contact);
         }
-        startActivity(intent);
+        mStartForResult.launch(intent);
     }
 }
