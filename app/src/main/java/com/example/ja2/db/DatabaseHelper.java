@@ -35,7 +35,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public Parking getParking(long id) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(Parking.TABLE_NAME, new String[]{Parking.COLUMN_ID, Parking.COLUMN_NAME, Parking.COLUMN_EMAIL, Parking.COLUMN_DESCRIPTION, Parking.COLUMN_LOCATION, Parking.COLUMN_LENGTH, Parking.COLUMN_LEVEL}, Parking.COLUMN_ID + "=?", new String[]{String.valueOf(id)}, null, null, null, null);
+        Cursor cursor = db.query(Parking.TABLE_NAME, new String[]{Parking.COLUMN_ID, Parking.COLUMN_NAME, Parking.COLUMN_EMAIL, Parking.COLUMN_DESCRIPTION, Parking.COLUMN_LOCATION, Parking.COLUMN_LENGTH, Parking.COLUMN_AVAILABLE, Parking.COLUMN_LEVEL, Parking.COLUMN_DATE}, Parking.COLUMN_ID + "=?", new String[]{String.valueOf(id)}, null, null, null, null);
         if (cursor != null) cursor.moveToFirst();
         Parking parking = new Parking();
         parking.setId(cursor.getInt(cursor.getColumnIndexOrThrow(Parking.COLUMN_ID)));
@@ -44,7 +44,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         parking.setDescription(cursor.getString(cursor.getColumnIndexOrThrow(Parking.COLUMN_DESCRIPTION)));
         parking.setLocation(cursor.getString(cursor.getColumnIndexOrThrow(Parking.COLUMN_LOCATION)));
         parking.setLength(cursor.getDouble(cursor.getColumnIndexOrThrow(Parking.COLUMN_LENGTH)));
+        int status = cursor.getInt(cursor.getColumnIndexOrThrow(Parking.COLUMN_AVAILABLE));
+        parking.setAvailable(status != 0);
         parking.setLevel(cursor.getInt(cursor.getColumnIndexOrThrow(Parking.COLUMN_LEVEL)));
+        parking.setDate(cursor.getLong(cursor.getColumnIndexOrThrow(Parking.COLUMN_DATE)));
         cursor.close();
         return parking;
     }
@@ -63,7 +66,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 parking.setDescription(cursor.getString(cursor.getColumnIndexOrThrow(Parking.COLUMN_DESCRIPTION)));
                 parking.setLocation(cursor.getString(cursor.getColumnIndexOrThrow(Parking.COLUMN_LOCATION)));
                 parking.setLength(cursor.getDouble(cursor.getColumnIndexOrThrow(Parking.COLUMN_LENGTH)));
+                int status = cursor.getInt(cursor.getColumnIndexOrThrow(Parking.COLUMN_AVAILABLE));
+                parking.setAvailable(status != 0);
                 parking.setLevel(cursor.getInt(cursor.getColumnIndexOrThrow(Parking.COLUMN_LEVEL)));
+                parking.setDate(cursor.getLong(cursor.getColumnIndexOrThrow(Parking.COLUMN_DATE)));
                 mData.add(parking);
             } while (cursor.moveToNext());
         }
@@ -80,7 +86,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(Parking.COLUMN_DESCRIPTION, parking.getDescription());
         values.put(Parking.COLUMN_LOCATION, parking.getLocation());
         values.put(Parking.COLUMN_LENGTH, parking.getLength());
+        values.put(Parking.COLUMN_AVAILABLE, parking.getAvailable());
         values.put(Parking.COLUMN_LEVEL, parking.getLevel());
+        values.put(Parking.COLUMN_DATE, parking.getDate());
         long id = db.insert(Parking.TABLE_NAME, null, values);
         db.close();
         return id;
@@ -94,9 +102,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(Parking.COLUMN_DESCRIPTION, parking.getDescription());
         values.put(Parking.COLUMN_LOCATION, parking.getLocation());
         values.put(Parking.COLUMN_LENGTH, parking.getLength());
+        values.put(Parking.COLUMN_AVAILABLE, parking.getAvailable());
         values.put(Parking.COLUMN_LEVEL, parking.getLevel());
+        values.put(Parking.COLUMN_DATE, parking.getDate());
         int rowsUpdated = db.update(Parking.TABLE_NAME, values, Parking.COLUMN_ID + " = ? ", new String[]{String.valueOf(parking.getId())});
-        db.close(); // Close the database
+        db.close();
         return rowsUpdated;
     }
 
@@ -108,10 +118,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public ArrayList<Parking> searchParking(String keyword) {
         ArrayList<Parking> parkings = new ArrayList<>();
-        String selectQuery = "SELECT * FROM " + Parking.TABLE_NAME + " WHERE " + Parking.COLUMN_NAME + " LIKE '%" + keyword + "%' OR " + Parking.COLUMN_EMAIL + " LIKE '%" + keyword + "%' " +
-                "OR " +  Parking.COLUMN_LOCATION + " LIKE '%" + keyword + "%' "+
-                "OR " +  Parking.COLUMN_LENGTH + " LIKE '%" + keyword + "%' "+
-        " ORDER BY " + Parking.COLUMN_ID + " DESC";
+        String selectQuery = "SELECT * FROM " + Parking.TABLE_NAME + " WHERE " + Parking.COLUMN_NAME + " LIKE '%" + keyword + "%' OR " + Parking.COLUMN_EMAIL + " LIKE '%" + keyword + "%' " + "OR " + Parking.COLUMN_LOCATION + " LIKE '%" + keyword + "%' " + "OR " + Parking.COLUMN_LENGTH + " LIKE '%" + keyword + "%' " + " ORDER BY " + Parking.COLUMN_ID + " DESC";
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {

@@ -62,45 +62,118 @@
             app:tint="@color/white" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:barrierDirection="right"
+        app:constraint_referenced_ids="text_view_username, text_view_email, text_view_description, text_view_location" />
+
+    <TextView
+        android:id="@+id/text_view_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_16sdp"
+        android:text="@string/hint_input_user_name"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_text_user_name"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/edit_text_user_name" />
+
     <EditText
         android:id="@+id/edit_text_user_name"
-        android:layout_width="match_parent"
+        android:layout_width="@dimen/_0sdp"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_16sdp"
         android:layout_marginVertical="@dimen/_4sdp"
-        android:hint="@string/hint_input_user_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/barrier"
         app:layout_constraintTop_toBottomOf="@+id/constraint_layout_toolbar" />
+
+    <TextView
+        android:id="@+id/text_view_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_16sdp"
+        android:text="@string/hint_input_email"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_text_email"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/edit_text_email" />
 
     <EditText
         android:id="@+id/edit_text_email"
-        android:layout_width="match_parent"
+        android:layout_width="@dimen/_0sdp"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_16sdp"
         android:layout_marginVertical="@dimen/_4sdp"
-        android:hint="@string/hint_input_email"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/barrier"
         app:layout_constraintTop_toBottomOf="@+id/edit_text_user_name" />
+
+    <TextView
+        android:id="@+id/text_view_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_16sdp"
+        android:text="@string/hint_input_description"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_text_description"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/edit_text_description" />
 
     <EditText
         android:id="@+id/edit_text_description"
-        android:layout_width="match_parent"
+        android:layout_width="@dimen/_0sdp"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_16sdp"
         android:layout_marginVertical="@dimen/_4sdp"
-        android:hint="@string/hint_input_description"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/barrier"
         app:layout_constraintTop_toBottomOf="@+id/edit_text_email" />
+
+    <TextView
+        android:id="@+id/text_view_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_16sdp"
+        android:text="@string/hint_input_location"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_text_location"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/edit_text_location" />
 
     <EditText
         android:id="@+id/edit_text_location"
-        android:layout_width="match_parent"
+        android:layout_width="@dimen/_0sdp"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_16sdp"
         android:layout_marginVertical="@dimen/_4sdp"
-        android:hint="@string/hint_input_location"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/barrier"
         app:layout_constraintTop_toBottomOf="@+id/edit_text_description" />
+
+    <TextView
+        android:id="@+id/text_view_length"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_16sdp"
+        android:text="@string/hint_input_length"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_text_length"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/edit_text_length" />
 
     <EditText
         android:id="@+id/edit_text_length"
-        android:layout_width="match_parent"
+        android:layout_width="@dimen/_0sdp"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_16sdp"
         android:layout_marginVertical="@dimen/_4sdp"
-        android:hint="@string/hint_input_length"
         android:inputType="numberDecimal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/barrier"
         app:layout_constraintTop_toBottomOf="@+id/edit_text_location" />
 
     <androidx.constraintlayout.widget.Guideline
@@ -114,7 +187,10 @@
         android:id="@+id/check_box_available"
         android:layout_width="@dimen/_0sdp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_16sdp"
+        android:checked="true"
         android:text="@string/title_field_available"
+        android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/guide_line_50"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edit_text_length" />
@@ -123,10 +199,27 @@
         android:id="@+id/spinner_level"
         android:layout_width="@dimen/_0sdp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/_16sdp"
         app:layout_constraintBottom_toBottomOf="@+id/check_box_available"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/guide_line_50"
         app:layout_constraintTop_toTopOf="@+id/check_box_available" />
+
+    <TextView
+        android:id="@+id/text_view_date"
+        android:layout_width="@dimen/_0sdp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_16sdp"
+        android:drawableLeft="@drawable/ic_calender"
+        android:drawablePadding="@dimen/_8sdp"
+        android:gravity="center_vertical"
+        android:onClick="onClick"
+        android:paddingVertical="@dimen/_8sdp"
+        android:text="@string/hint_input_date"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinner_level" />
 
     <LinearLayout
         android:id="@+id/linear_layout_group_task"
@@ -137,7 +230,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/check_box_available">
+        app:layout_constraintTop_toBottomOf="@+id/text_view_date">
 
         <RelativeLayout
             android:id="@+id/relative_layout_title_observation"

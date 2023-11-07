@@ -13,17 +13,17 @@
     <string name="title_list_parking_screen">List parking</string>
     <string name="title_add_parking_screen">Add parking</string>
     <string name="title_edit_parking_screen">Update parking</string>
-    <string name="hint_input_user_name">UserName(*)</string>
-    <string name="hint_input_email">Email(*)</string>
+    <string name="hint_input_user_name">Name of(*)</string>
+    <string name="hint_input_email">Contact(*)</string>
     <string name="hint_input_description">Description</string>
     <string name="hint_input_location">Location(*)</string>
-    <string name="hint_input_length">Length(*)</string>
+    <string name="hint_input_length">Distance(km*)</string>
     <string name="title_field_available">Available</string>
     <string name="toast_message_create_parking_successful">Create parking successful</string>
     <string name="toast_message_remove_parking_successful">Remove account successful</string>
     <string name="toast_message_update_parking_successful">Update parking successful</string>
     <string name="title_dialog_confirm">Confirm dialog</string>
-    <string name="message_dialog_confirm">Do you want to save data conntact?</string>
+    <string name="message_dialog_confirm">Do you want to save data parking?</string>
     <string name="button_confirm">Save</string>
     <string name="button_cancel">Cancel</string>
     <string name="hint_input_search">Search ...</string>
@@ -37,4 +37,6 @@
     <string name="hint_input_time">HH/mm</string>
     <string name="title_button_save">Save</string>
     <string name="validate_form_input_parking">Error validate input form</string>
+    <string name="general_level">Level %1$d</string>
+    <string name="general_distance">%1$skm</string>
 </resources>
