@@ -1,6 +1,9 @@
 package com.example.ja2.ui.detail;
 
 import static com.example.ja2.db.entity.Contact.DATA_CONTACT;
+import static com.example.ja2.ui.task.TaskActivity.ADD_TASK;
+import static com.example.ja2.ui.task.TaskActivity.REMOVE_TASK;
+import static com.example.ja2.ui.task.TaskActivity.UPDATE_TASK;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -13,20 +16,34 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ja2.R;
 import com.example.ja2.db.DatabaseHelper;
 import com.example.ja2.db.entity.Contact;
-import com.example.ja2.ui.main.MainActivity;
+import com.example.ja2.db.entity.Task;
+import com.example.ja2.ui.task.TaskActivity;
+import com.example.ja2.ui.task.TaskAdapter;
 
-/** @noinspection deprecation*/
-public class ContactActivity extends AppCompatActivity implements View.OnClickListener {
+import java.util.ArrayList;
 
+/**
+ * @noinspection deprecation
+ */
+public class ContactActivity extends AppCompatActivity implements View.OnClickListener, TaskAdapter.OnItemClickListener {
+
+    public static final String DATA_POSITION = "DATA_POSITION";
+    public static final String REMOVE_CONTACT = "REMOVE_CONTACT";
+    public static final String ADD_CONTACT = "ADD_CONTACT";
+    public static final String UPDATE_CONTACT = "UPDATE_CONTACT";
     private Contact contact = null;
     private int position = -1;
     private TextView textViewTitleScreen = null;
@@ -34,12 +51,28 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
     private ImageView imageViewAdd = null;
     private EditText editTextUserName = null;
     private EditText editTextEmail = null;
+    private LinearLayout linearLayoutGroupTask = null;
+    private RecyclerView recyclerViewTask = null;
+    private TaskAdapter adapter = null;
+    @SuppressLint("NewApi")
+    ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+        if (result.getResultCode() == Activity.RESULT_OK) {
+            Intent intent = result.getData();
+            String action = intent.getAction();
+            if (action.equals(ADD_TASK)) {
+                Task task = intent.getParcelableExtra(Task.DATA_TASK, Task.class);
+                adapter.addTheFirsItem(task);
+            } else if (action.equals(REMOVE_TASK)) {
+                int position = intent.getIntExtra(TaskActivity.DATA_POSITION, -1);
+                adapter.removeItem(position);
+            } else if (action.equals(UPDATE_TASK)) {
+                int position = intent.getIntExtra(TaskActivity.DATA_POSITION, -1);
+                Task task = intent.getParcelableExtra(Task.DATA_TASK, Task.class);
+                adapter.updatePosition(position, task);
+            }
+        }
+    });
     private DatabaseHelper db;
-
-    public static final String DATA_POSITION = "DATA_POSITION";
-    public static final String REMOVE_CONTACT = "REMOVE_CONTACT";
-    public static final String ADD_CONTACT = "ADD_CONTACT";
-    public static final String UPDATE_CONTACT = "UPDATE_CONTACT";
 
     @SuppressLint({"NewApi", "MissingInflatedId"})
     @Override
@@ -48,12 +81,14 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_contact);
         db = new DatabaseHelper(this);
         contact = getIntent().getParcelableExtra(DATA_CONTACT, Contact.class);
-        position = getIntent().getIntExtra(DATA_POSITION, -1);
+        position = getIntent().getIntExtra(ContactActivity.DATA_POSITION, -1);
         textViewTitleScreen = findViewById(R.id.text_view_title_screen);
         imageViewRemove = findViewById(R.id.image_view_remove);
         imageViewAdd = findViewById(R.id.image_view_add);
         editTextUserName = findViewById(R.id.edit_text_user_name);
         editTextEmail = findViewById(R.id.edit_text_email);
+        linearLayoutGroupTask = findViewById(R.id.linear_layout_group_task);
+        recyclerViewTask = findViewById(R.id.recycler_view_task);
         if (contact != null) {
             Log.e("Tag", "--- update: " + contact);
             textViewTitleScreen.setText(R.string.title_edit_contact_screen);
@@ -61,11 +96,16 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
             editTextEmail.setText(contact.getEmail());
             imageViewRemove.setVisibility(View.VISIBLE);
             imageViewAdd.setVisibility(View.GONE);
+            linearLayoutGroupTask.setVisibility(View.VISIBLE);
+            ArrayList mDataTask = new ArrayList<Task>();
+            adapter = new TaskAdapter(mDataTask, this);
+            recyclerViewTask.setAdapter(adapter);
         } else {
             Log.e("Tag", "--- create new account");
             textViewTitleScreen.setText(R.string.title_add_contact_screen);
             imageViewRemove.setVisibility(View.GONE);
             imageViewAdd.setVisibility(View.VISIBLE);
+            linearLayoutGroupTask.setVisibility(View.GONE);
         }
     }
 
@@ -82,12 +122,12 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
             if (TextUtils.isEmpty(name) || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                 Toast.makeText(ContactActivity.this, R.string.validate_form_input_contact, Toast.LENGTH_LONG).show();
             } else {
-                if(position != -1) {
+                if (position != -1) {
                     contact.setName(name);
                     contact.setEmail(email);
                     db.updateContact(contact);
                     intent.setAction(UPDATE_CONTACT);
-                    intent.putExtra(DATA_POSITION, position);
+                    intent.putExtra(ContactActivity.DATA_POSITION, position);
                     intent.putExtra(DATA_CONTACT, contact);
                 } else {
                     contact = new Contact(name, email);
@@ -111,7 +151,7 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.image_view_back: {
-                if(position != -1) {
+                if (position != -1) {
                     onBackPressed();
                 } else {
                     String name = editTextUserName.getText().toString().trim();
@@ -129,7 +169,7 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
                 db.deleteContact(contact);
                 Intent intent = new Intent();
                 intent.setAction(REMOVE_CONTACT);
-                intent.putExtra(DATA_POSITION, position);
+                intent.putExtra(ContactActivity.DATA_POSITION, position);
                 intent.putExtra(DATA_CONTACT, contact);
                 setResult(Activity.RESULT_OK, intent);
                 finish();
@@ -155,9 +195,23 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
                 }
                 break;
             }
+            case R.id.image_view_edit: {
+                Intent intent = new Intent(ContactActivity.this, TaskActivity.class);
+                mStartForResult.launch(intent);
+                break;
+            }
             default: {
                 Log.e("Tag", "--- unknown define action");
             }
         }
+    }
+
+    @Override
+    public void onItemClickListener(int position, Task task) {
+        Log.e("Tag", "--- navigate to edit task: " + task.getId());
+        Intent intent = new Intent(ContactActivity.this, TaskActivity.class);
+        intent.putExtra(TaskActivity.DATA_POSITION, position);
+        intent.putExtra(Task.DATA_TASK, task);
+        mStartForResult.launch(intent);
     }
 }

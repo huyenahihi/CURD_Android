@@ -23,4 +23,12 @@
     <string name="button_confirm">Save</string>
     <string name="button_cancel">Cancel</string>
     <string name="hint_input_search">Search ...</string>
+    <string name="title_observation">Time of observation</string>
+    <string name="title_date">Date(*):</string>
+    <string name="title_time">Time(*):</string>
+    <string name="hint_input_note">Note</string>
+    <string name="title_add_task_screen">Create new task</string>
+    <string name="title_update_task_screen">Update task</string>
+    <string name="hint_input_date">dd/MM/YYYY</string>
+    <string name="hint_input_time">hh/mm</string>
 </resources>

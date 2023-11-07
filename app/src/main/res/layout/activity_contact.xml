@@ -55,6 +55,7 @@
             android:onClick="onClick"
             android:padding="@dimen/_16sdp"
             android:src="@drawable/ic_add"
+            android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="@+id/text_view_title_screen"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/text_view_title_screen" />
@@ -75,5 +76,53 @@
         android:layout_marginVertical="@dimen/_4sdp"
         android:hint="@string/hint_input_email"
         app:layout_constraintTop_toBottomOf="@+id/edit_text_user_name" />
+
+    <LinearLayout
+        android:id="@+id/linear_layout_group_task"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@+id/edit_text_email">
+
+        <RelativeLayout
+            android:id="@+id/relative_layout_title_observation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/purple_500"
+            android:padding="@dimen/_16sdp"
+            android:paddingHorizontal="@dimen/_8sdp">
+
+            <TextView
+                android:id="@+id/text_view_task"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="@string/title_observation"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/image_view_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="right"
+                android:onClick="onClick"
+                android:src="@drawable/ic_add_task"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:tint="@color/white" />
+        </RelativeLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view_task"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintTop_toBottomOf="@+id/relative_layout_title_observation"
+            tools:itemCount="10"
+            tools:listitem="@layout/item_task" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

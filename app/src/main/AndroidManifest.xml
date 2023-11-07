@@ -21,8 +21,9 @@
             </intent-filter>
         </activity>
 
-
         <activity android:name=".ui.detail.ContactActivity" />
+
+        <activity android:name=".ui.task.TaskActivity" />
     </application>
 
 </manifest>
