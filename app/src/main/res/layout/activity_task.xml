@@ -92,6 +92,7 @@
         android:layout_height="wrap_content"
         android:layout_marginVertical="@dimen/_8sdp"
         android:layout_marginEnd="@dimen/_16sdp"
+        android:onClick="onClick"
         android:src="@drawable/ic_calender"
         app:layout_constraintBottom_toBottomOf="@+id/edit_text_date"
         app:layout_constraintEnd_toEndOf="parent"
@@ -131,6 +132,7 @@
         android:layout_height="wrap_content"
         android:layout_marginVertical="@dimen/_8sdp"
         android:layout_marginEnd="@dimen/_16sdp"
+        android:onClick="onClick"
         android:src="@drawable/ic_time"
         app:layout_constraintBottom_toBottomOf="@+id/edit_text_time"
         app:layout_constraintEnd_toEndOf="parent"
@@ -149,6 +151,18 @@
         <EditText
             android:id="@+id/edit_text_note"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:gravity="top|left"
+            android:lines="8" />
     </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/button_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onClick"
+        android:text="@string/title_button_save"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_input_layout" />
 </androidx.constraintlayout.widget.ConstraintLayout>

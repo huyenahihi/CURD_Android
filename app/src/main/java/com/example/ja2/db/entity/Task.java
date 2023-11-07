@@ -10,6 +10,7 @@ public class Task implements Parcelable {
     public static final String DATA_TASK = "DATA_TASK";
     public static final String TABLE_NAME = "tbl_task";
     public static final String COLUMN_ID = "id";
+    public static final String COLUMN_UID = "uid";
     public static final String COLUMN_NOTE = "note";
     public static final String COLUMN_DATE_TIME = "date_time";
 
@@ -24,37 +25,49 @@ public class Task implements Parcelable {
             return new Task[size];
         }
     };
-    private String dateTime;
+
+    public static final String CREATE_TABLE =
+            "CREATE TABLE " + TABLE_NAME + "("
+                    + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                    + COLUMN_NOTE + " TEXT,"
+                    + COLUMN_DATE_TIME + " DATETIME DEFAULT CURRENT_TIMESTAMP,"
+                    + COLUMN_UID + " INTEGER"
+                    + ")";
+    private long dateTime;
     private String note;
+    private int uid;
     private int id;
 
     public Task() {
 
     }
 
-    public Task(String dateTime, String note) {
+    public Task(long dateTime, String note, int uid) {
         this.dateTime = dateTime;
         this.note = note;
+        this.uid = uid;
     }
 
-    public Task(String dateTime, String note, int id) {
+    public Task(long dateTime, String note, int uid, int id) {
         this.dateTime = dateTime;
         this.note = note;
+        this.uid = uid;
         this.id = id;
     }
 
     protected Task(Parcel in) {
-        dateTime = in.readString();
+        dateTime = in.readLong();
         note = in.readString();
+        uid = in.readInt();
         id = in.readInt();
     }
 
 
-    public String getDateTime() {
+    public long getDateTime() {
         return dateTime;
     }
 
-    public void setDateTime(String dateTime) {
+    public void setDateTime(long dateTime) {
         this.dateTime = dateTime;
     }
 
@@ -64,6 +77,14 @@ public class Task implements Parcelable {
 
     public void setNote(String note) {
         this.note = note;
+    }
+
+    public int getUID() {
+        return uid;
+    }
+
+    public void setUID(int uid) {
+        this.uid = uid;
     }
 
     public int getId() {
@@ -76,7 +97,7 @@ public class Task implements Parcelable {
 
     @Override
     public String toString() {
-        return "Task{" + "dateTime = '" + dateTime + '\'' + ",note = '" + note + '\'' + ",id = '" + id + '\'' + "}";
+        return "Task{" + "dateTime = '" + dateTime + '\'' + ",note = '" + note + "',uid = '" + uid + '\'' + ",id = '" + id + '\'' + "}";
     }
 
     @Override
@@ -86,8 +107,9 @@ public class Task implements Parcelable {
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
-        dest.writeString(dateTime);
+        dest.writeLong(dateTime);
         dest.writeString(note);
+        dest.writeInt(uid);
         dest.writeInt(id);
     }
 }

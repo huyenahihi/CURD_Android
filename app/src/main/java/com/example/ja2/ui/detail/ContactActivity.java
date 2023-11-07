@@ -55,13 +55,14 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
     private RecyclerView recyclerViewTask = null;
     private TaskAdapter adapter = null;
     @SuppressLint("NewApi")
-    ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+    ActivityResultLauncher<Intent> mStartForResultTask = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         if (result.getResultCode() == Activity.RESULT_OK) {
             Intent intent = result.getData();
             String action = intent.getAction();
             if (action.equals(ADD_TASK)) {
                 Task task = intent.getParcelableExtra(Task.DATA_TASK, Task.class);
                 adapter.addTheFirsItem(task);
+                recyclerViewTask.getLayoutManager().scrollToPosition(0);
             } else if (action.equals(REMOVE_TASK)) {
                 int position = intent.getIntExtra(TaskActivity.DATA_POSITION, -1);
                 adapter.removeItem(position);
@@ -69,6 +70,7 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
                 int position = intent.getIntExtra(TaskActivity.DATA_POSITION, -1);
                 Task task = intent.getParcelableExtra(Task.DATA_TASK, Task.class);
                 adapter.updatePosition(position, task);
+                recyclerViewTask.getLayoutManager().scrollToPosition(position);
             }
         }
     });
@@ -89,6 +91,8 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
         editTextEmail = findViewById(R.id.edit_text_email);
         linearLayoutGroupTask = findViewById(R.id.linear_layout_group_task);
         recyclerViewTask = findViewById(R.id.recycler_view_task);
+        recyclerViewTask.setNestedScrollingEnabled(true);
+        recyclerViewTask.setHasFixedSize(true);
         if (contact != null) {
             Log.e("Tag", "--- update: " + contact);
             textViewTitleScreen.setText(R.string.title_edit_contact_screen);
@@ -97,7 +101,7 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
             imageViewRemove.setVisibility(View.VISIBLE);
             imageViewAdd.setVisibility(View.GONE);
             linearLayoutGroupTask.setVisibility(View.VISIBLE);
-            ArrayList mDataTask = new ArrayList<Task>();
+            ArrayList mDataTask = db.getListTask(contact.getId());
             adapter = new TaskAdapter(mDataTask, this);
             recyclerViewTask.setAdapter(adapter);
         } else {
@@ -197,7 +201,10 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
             }
             case R.id.image_view_edit: {
                 Intent intent = new Intent(ContactActivity.this, TaskActivity.class);
-                mStartForResult.launch(intent);
+                Task task = new Task();
+                task.setUID(contact.getId());
+                intent.putExtra(Task.DATA_TASK, task);
+                mStartForResultTask.launch(intent);
                 break;
             }
             default: {
@@ -212,6 +219,6 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
         Intent intent = new Intent(ContactActivity.this, TaskActivity.class);
         intent.putExtra(TaskActivity.DATA_POSITION, position);
         intent.putExtra(Task.DATA_TASK, task);
-        mStartForResult.launch(intent);
+        mStartForResultTask.launch(intent);
     }
 }

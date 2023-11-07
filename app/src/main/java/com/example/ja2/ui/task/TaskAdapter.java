@@ -11,12 +11,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.ja2.R;
 import com.example.ja2.db.entity.Task;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
     private final ArrayList<Task> data;
     private final TaskAdapter.OnItemClickListener callBack;
+
+    DateFormat dateFormat = new SimpleDateFormat("dd/MM/YYYY HH:mm");
 
     public TaskAdapter(ArrayList<Task> data, OnItemClickListener callBack) {
         this.data = data;
@@ -34,7 +38,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         int mPosition = holder.getAdapterPosition();
         Task task = data.get(mPosition);
-        holder.textViewTime.setText(task.getDateTime());
+        holder.textViewTime.setText(dateFormat.format(task.getDateTime()));
         holder.textViewNote.setText(task.getNote());
         holder.itemView.setOnClickListener(v -> callBack.onItemClickListener(mPosition, task));
     }
@@ -45,13 +49,17 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     }
 
     public void removeItem(int position) {
-        data.remove(position);
-        notifyItemRemoved(position);
+        if (position >= 0 && position <= getItemCount()) {
+            data.remove(position);
+            notifyItemRemoved(position);
+        }
     }
 
     public void updatePosition(int position, Task task) {
-        data.set(position, task);
-        notifyItemChanged(position);
+        if (position >= 0 && position <= getItemCount()) {
+            data.set(position, task);
+            notifyItemChanged(position);
+        }
     }
 
     public void addTheFirsItem(Task task) {

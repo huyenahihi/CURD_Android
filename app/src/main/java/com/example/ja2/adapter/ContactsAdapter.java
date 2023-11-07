@@ -43,8 +43,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.MyView
         holder.name.setText(contact.getName());
         holder.email.setText(contact.getEmail());
         // Xử lý khi nút Chi tiết được bấm
-        holder.itemView.setOnClickListener(view ->
-                callBack.onItemClickListener(holder.getAdapterPosition(), contact));
+        holder.itemView.setOnClickListener(view -> callBack.onItemClickListener(holder.getAdapterPosition(), contact));
     }
 
     // cho biết số phần tử của dữ liệu
@@ -54,13 +53,17 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.MyView
     }
 
     public void removeItem(int position) {
-        contactsList.remove(position);
-        notifyItemRemoved(position);
+        if (position >= 0 && position <= getItemCount()) {
+            contactsList.remove(position);
+            notifyItemRemoved(position);
+        }
     }
 
     public void updatePosition(int position, Contact contact) {
-        contactsList.set(position, contact);
-        notifyItemChanged(position);
+        if (position >= 0 && position <= getItemCount()) {
+            contactsList.set(position, contact);
+            notifyItemChanged(position);
+        }
     }
 
     public void addTheFirsItem(Contact contact) {

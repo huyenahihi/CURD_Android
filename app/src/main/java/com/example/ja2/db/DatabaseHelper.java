@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.ja2.db.entity.Contact;
+import com.example.ja2.db.entity.Task;
 
 import java.util.ArrayList;
 
@@ -22,11 +23,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL(Contact.CREATE_TABLE);
+        sqLiteDatabase.execSQL(Task.CREATE_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Contact.TABLE_NAME);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Task.TABLE_NAME);
         onCreate(sqLiteDatabase);
     }
 
@@ -90,9 +93,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public ArrayList<Contact> searchContacts(String keyword) {
         ArrayList<Contact> contacts = new ArrayList<>();
-        String selectQuery = "SELECT * FROM " + Contact.TABLE_NAME +
-                " WHERE " + Contact.COLUMN_NAME + " LIKE '%" + keyword + "%' OR " + Contact.COLUMN_EMAIL + " LIKE '%" + keyword +
-                "%' ORDER BY " + Contact.COLUMN_ID + " DESC";
+        String selectQuery = "SELECT * FROM " + Contact.TABLE_NAME + " WHERE " + Contact.COLUMN_NAME + " LIKE '%" + keyword + "%' OR " + Contact.COLUMN_EMAIL + " LIKE '%" + keyword + "%' ORDER BY " + Contact.COLUMN_ID + " DESC";
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {
@@ -106,5 +107,47 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         db.close();
         return contacts;
+    }
+
+    public ArrayList<Task> getListTask(long uid) {
+        ArrayList<Task> mData = new ArrayList<>();
+        String selectQuery = "SELECT * FROM " + Task.TABLE_NAME + " WHERE " + Task.COLUMN_UID + " = " + uid + " ORDER BY " + Task.COLUMN_ID + " DESC";
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            do {
+                Task task = new Task();
+                task.setId(cursor.getInt(cursor.getColumnIndexOrThrow(Task.COLUMN_ID)));
+                task.setNote(cursor.getString(cursor.getColumnIndexOrThrow(Task.COLUMN_NOTE)));
+                task.setDateTime(cursor.getLong(cursor.getColumnIndexOrThrow(Task.COLUMN_DATE_TIME)));
+                task.setUID(cursor.getInt(cursor.getColumnIndexOrThrow(Task.COLUMN_UID)));
+                mData.add(task);
+            } while (cursor.moveToNext());
+        }
+        db.close();
+        return mData;
+    }
+
+    public long insertTask(Task task) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(Task.COLUMN_NOTE, task.getNote());
+        values.put(Task.COLUMN_DATE_TIME, task.getDateTime());
+        values.put(Task.COLUMN_UID, task.getUID());
+        long id = db.insert(Task.TABLE_NAME, null, values);
+        db.close();
+        return id;
+    }
+
+    public int updateTask(Task task) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(Task.COLUMN_ID, task.getId());
+        values.put(Task.COLUMN_NOTE, task.getNote());
+        values.put(Task.COLUMN_DATE_TIME, task.getDateTime());
+        values.put(Task.COLUMN_UID, task.getUID());
+        int rowsUpdated = db.update(Task.TABLE_NAME, values, Task.COLUMN_ID + " = ? ", new String[]{String.valueOf(task.getId())});
+        db.close();
+        return rowsUpdated;
     }
 }

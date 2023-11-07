@@ -19,7 +19,7 @@
     <string name="toast_message_remove_contact_successful">Remove account successful</string>
     <string name="toast_message_update_contact_successful">Update contact successful</string>
     <string name="title_dialog_confirm">Confirm dialog</string>
-    <string name="message_dialog_confirm">Do you want to save data?</string>
+    <string name="message_dialog_confirm">Do you want to save data conntact?</string>
     <string name="button_confirm">Save</string>
     <string name="button_cancel">Cancel</string>
     <string name="hint_input_search">Search ...</string>
@@ -30,5 +30,7 @@
     <string name="title_add_task_screen">Create new task</string>
     <string name="title_update_task_screen">Update task</string>
     <string name="hint_input_date">dd/MM/YYYY</string>
-    <string name="hint_input_time">hh/mm</string>
+    <string name="hint_input_time">HH/mm</string>
+    <string name="title_button_save">Save</string>
+    <string name="validate_form_input_task">Error validate input form</string>
 </resources>
