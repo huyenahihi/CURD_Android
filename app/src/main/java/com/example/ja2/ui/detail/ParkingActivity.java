@@ -18,6 +18,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,8 +34,13 @@ import com.example.ja2.db.entity.Parking;
 import com.example.ja2.db.entity.Task;
 import com.example.ja2.ui.task.TaskActivity;
 import com.example.ja2.ui.task.TaskAdapter;
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * @noinspection deprecation
@@ -45,6 +51,9 @@ public class ParkingActivity extends AppCompatActivity implements View.OnClickLi
     public static final String REMOVE_PARKING = "REMOVE_PARKING";
     public static final String ADD_PARKING = "ADD_PARKING";
     public static final String UPDATE_PARKING = "UPDATE_PARKING";
+    public static final String DATE_FORMAT = "dd/MM/yyyy";
+    Calendar now = Calendar.getInstance();
+    DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
     private Parking parking = null;
     private int position = -1;
     private TextView textViewTitleScreen = null;
@@ -56,6 +65,8 @@ public class ParkingActivity extends AppCompatActivity implements View.OnClickLi
     private EditText editTextLocation = null;
     private EditText editTextLength = null;
     private CheckBox checkBoxAvailable = null;
+    private Spinner spinner = null;
+    private TextView textViewDate = null;
     private LinearLayout linearLayoutGroupTask = null;
     private RecyclerView recyclerViewTask = null;
     private TaskAdapter adapter = null;
@@ -78,6 +89,7 @@ public class ParkingActivity extends AppCompatActivity implements View.OnClickLi
             }
         }
     });
+    private LevelAdapter adapterLevel = null;
     private DatabaseHelper db;
 
     @SuppressLint({"NewApi", "MissingInflatedId"})
@@ -97,10 +109,19 @@ public class ParkingActivity extends AppCompatActivity implements View.OnClickLi
         editTextLocation = findViewById(R.id.edit_text_location);
         editTextLength = findViewById(R.id.edit_text_length);
         checkBoxAvailable = findViewById(R.id.check_box_available);
+        spinner = findViewById(R.id.spinner_level);
+        textViewDate = findViewById(R.id.text_view_date);
         linearLayoutGroupTask = findViewById(R.id.linear_layout_group_task);
         recyclerViewTask = findViewById(R.id.recycler_view_task);
         recyclerViewTask.setNestedScrollingEnabled(true);
         recyclerViewTask.setHasFixedSize(true);
+        ArrayList mData = new ArrayList();
+        mData.add(1);
+        mData.add(2);
+        mData.add(3);
+        mData.add(4);
+        adapterLevel = new LevelAdapter(mData);
+        spinner.setAdapter(adapterLevel);
         if (parking != null) {
             Log.e("Tag", "--- update: " + parking);
             textViewTitleScreen.setText(R.string.title_edit_parking_screen);
@@ -110,6 +131,10 @@ public class ParkingActivity extends AppCompatActivity implements View.OnClickLi
             editTextLocation.setText(parking.getLocation());
             editTextLength.setText(String.valueOf(parking.getLength()));
             checkBoxAvailable.setChecked(parking.getAvailable());
+            spinner.setSelection(parking.getLevel() - 1);
+            Date date = new Date(parking.getDate());
+            now.setTime(date);
+            textViewDate.setText(dateFormat.format(date));
             imageViewRemove.setVisibility(View.VISIBLE);
             imageViewAdd.setVisibility(View.GONE);
             linearLayoutGroupTask.setVisibility(View.VISIBLE);
@@ -138,7 +163,7 @@ public class ParkingActivity extends AppCompatActivity implements View.OnClickLi
             String description = editTextDescription.getText().toString().trim();
             String location = editTextLocation.getText().toString().trim();
             String height = editTextLength.getText().toString().trim();
-            if (TextUtils.isEmpty(name) || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            if (TextUtils.isEmpty(name) || TextUtils.isEmpty(email) || TextUtils.isEmpty(location) || TextUtils.isEmpty(height) || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                 Toast.makeText(ParkingActivity.this, R.string.validate_form_input_parking, Toast.LENGTH_LONG).show();
             } else {
                 parking = new Parking();
@@ -148,6 +173,8 @@ public class ParkingActivity extends AppCompatActivity implements View.OnClickLi
                 parking.setLocation(location);
                 parking.setLength(Double.valueOf(height));
                 parking.setAvailable(checkBoxAvailable.isChecked());
+                parking.setLevel(spinner.getSelectedItemPosition() + 1);
+                parking.setDate(now.getTimeInMillis());
                 if (position != -1) {
                     db.updateParking(parking);
                     intent.setAction(UPDATE_PARKING);
@@ -179,7 +206,10 @@ public class ParkingActivity extends AppCompatActivity implements View.OnClickLi
                 } else {
                     String name = editTextUserName.getText().toString().trim();
                     String email = editTextEmail.getText().toString().trim();
-                    if (TextUtils.isEmpty(name) || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                    String description = editTextDescription.getText().toString().trim();
+                    String location = editTextLocation.getText().toString().trim();
+                    String height = editTextLength.getText().toString().trim();
+                    if (TextUtils.isEmpty(name) || TextUtils.isEmpty(email) || TextUtils.isEmpty(location) || TextUtils.isEmpty(height) || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                         finish();
                     } else {
                         onBackPressed();
@@ -204,7 +234,7 @@ public class ParkingActivity extends AppCompatActivity implements View.OnClickLi
                 String description = editTextDescription.getText().toString().trim();
                 String location = editTextLocation.getText().toString().trim();
                 String height = editTextLength.getText().toString().trim();
-                if (TextUtils.isEmpty(name) || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                if (TextUtils.isEmpty(name) || TextUtils.isEmpty(email) || TextUtils.isEmpty(location) || TextUtils.isEmpty(height) || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                     Toast.makeText(ParkingActivity.this, R.string.validate_form_input_task, Toast.LENGTH_LONG).show();
                 } else {
                     parking = new Parking();
@@ -214,10 +244,12 @@ public class ParkingActivity extends AppCompatActivity implements View.OnClickLi
                     parking.setLocation(location);
                     parking.setLength(Double.valueOf(height));
                     parking.setAvailable(checkBoxAvailable.isChecked());
+                    parking.setLevel(spinner.getSelectedItemPosition() + 1);
+                    parking.setDate(now.getTimeInMillis());
                     long id = db.insertParking(parking);
                     Parking parking = db.getParking(id);
                     if (parking != null) {
-                        Log.e("Tag", "--- add parking");
+                        Log.e("Tag", "--- add parking: " + parking);
                         Intent intent = new Intent();
                         intent.setAction(ADD_PARKING);
                         intent.putExtra(DATA_PARKING, parking);
@@ -233,6 +265,16 @@ public class ParkingActivity extends AppCompatActivity implements View.OnClickLi
                 task.setUID(parking.getId());
                 intent.putExtra(Task.DATA_TASK, task);
                 mStartForResultTask.launch(intent);
+                break;
+            }
+            case R.id.text_view_date: {
+                DatePickerDialog datePickerDialog = DatePickerDialog.newInstance((mView, year, monthOfYear, dayOfMonth) -> {
+                    now.set(Calendar.YEAR, year);
+                    now.set(Calendar.MONTH, monthOfYear);
+                    now.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                    textViewDate.setText(dateFormat.format(now.getTime()));
+                }, now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
+                datePickerDialog.show(getSupportFragmentManager(), "DatePickerDialog");
                 break;
             }
             default: {

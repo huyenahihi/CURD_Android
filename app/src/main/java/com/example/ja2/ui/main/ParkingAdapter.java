@@ -12,13 +12,20 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.ja2.R;
 import com.example.ja2.db.entity.Parking;
 
+import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class ParkingAdapter extends RecyclerView.Adapter<ParkingAdapter.MyViewHolder> {
 
+    private static final String DATE_FORMAT = "dd/MM/yyyy";
+    private static final DecimalFormat decimalFormat = new DecimalFormat("###.###");
     // 1- Variable
     private final ArrayList<Parking> data;
     private final OnItemClickListener callBack;
+    DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
 
     //bo sung
     public ParkingAdapter(ArrayList<Parking> data, OnItemClickListener callBack) {
@@ -37,11 +44,14 @@ public class ParkingAdapter extends RecyclerView.Adapter<ParkingAdapter.MyViewHo
 
     //chuyển dữ liệu phần tử vào ViewHolder
     @Override
-    @SuppressLint("RecyclerView")
+    @SuppressLint({"RecyclerView", "StringFormatInvalid"})
     public void onBindViewHolder(@NonNull ParkingAdapter.MyViewHolder holder, int positions) {
         final Parking parking = data.get(holder.getAdapterPosition());
-        holder.name.setText(parking.getName());
-        holder.email.setText(parking.getEmail());
+        Date date = new Date(parking.getDate());
+        holder.textViewDate.setText(dateFormat.format(date));
+        holder.textViewDistance.setText(holder.itemView.getContext().getString(R.string.general_distance, decimalFormat.format(parking.getLength())));
+        holder.textViewName.setText(parking.getName());
+        holder.textViewEmail.setText(parking.getEmail());
         // Xử lý khi nút Chi tiết được bấm
         holder.itemView.setOnClickListener(view -> callBack.onItemClickListener(holder.getAdapterPosition(), parking));
     }
@@ -83,13 +93,17 @@ public class ParkingAdapter extends RecyclerView.Adapter<ParkingAdapter.MyViewHo
 
     // 2- ViewHolder
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView name;
-        public TextView email;
+        public TextView textViewDate;
+        public TextView textViewDistance;
+        public TextView textViewName;
+        public TextView textViewEmail;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            this.name = itemView.findViewById(R.id.name);
-            this.email = itemView.findViewById(R.id.email);
+            this.textViewDate = itemView.findViewById(R.id.text_view_date);
+            this.textViewDistance = itemView.findViewById(R.id.text_view_distance);
+            this.textViewName = itemView.findViewById(R.id.text_view_name);
+            this.textViewEmail = itemView.findViewById(R.id.text_view_email);
         }
     }
 }
