@@ -10,6 +10,7 @@
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="validate_form_input_contact">Please input user name and password</string>
+    <string name="title_list_contact_screen">List contact</string>
     <string name="title_add_contact_screen">Add contact</string>
     <string name="title_edit_contact_screen">Update contact</string>
     <string name="hint_input_user_name">UserName</string>
@@ -21,4 +22,5 @@
     <string name="message_dialog_confirm">Do you want to save data?</string>
     <string name="button_confirm">Save</string>
     <string name="button_cancel">Cancel</string>
+    <string name="hint_input_search">Search ...</string>
 </resources>

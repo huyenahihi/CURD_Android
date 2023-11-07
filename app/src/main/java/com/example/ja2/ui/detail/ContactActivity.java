@@ -111,7 +111,17 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.image_view_back: {
-                onBackPressed();
+                if(position != -1) {
+                    onBackPressed();
+                } else {
+                    String name = editTextUserName.getText().toString().trim();
+                    String email = editTextEmail.getText().toString().trim();
+                    if (TextUtils.isEmpty(name) || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                        finish();
+                    } else {
+                        onBackPressed();
+                    }
+                }
                 break;
             }
             case R.id.image_view_remove: {

@@ -7,26 +7,24 @@ import static com.example.ja2.ui.detail.ContactActivity.UPDATE_CONTACT;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
-import android.util.Patterns;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewFlipper;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -40,9 +38,13 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements ContactsAdapter.OnItemClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, ContactsAdapter.OnItemClickListener {
 
+    private final int DISPLAY_NORMAL = 0;
+    private final int DISPLAY_SEARCH = 1;
     private final ArrayList<Contact> contactArrayList = new ArrayList<>();
+    private ViewFlipper viewFlipper = null;
+    private EditText editTextQuery = null;
     private ContactsAdapter contactsAdapter;
     @SuppressLint("NewApi")
     ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
@@ -67,15 +69,40 @@ public class MainActivity extends AppCompatActivity implements ContactsAdapter.O
     });
     private RecyclerView recyclerView;
     private DatabaseHelper db;
+    private Handler mHandler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        // Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("My Favorite Contacts");
+        viewFlipper = findViewById(R.id.view_flipper);
+        editTextQuery = findViewById(R.id.edit_text_query);
+        editTextQuery.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                mHandler.removeCallbacksAndMessages(null);
+                mHandler.postDelayed(() -> {
+                    String keyword = s.toString().trim();
+                    ArrayList mDataSearch = null;
+                    if(!TextUtils.isEmpty(keyword)) {
+                        mDataSearch = db.searchContacts(keyword);
+                    } else {
+                        Log.e("Tag", "--- search key: " + keyword);
+                        mDataSearch = db.getAllContacts();
+                    }
+                    contactsAdapter.submitData(mDataSearch);
+                }, 250);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         // RecyclerVIew
         recyclerView = findViewById(R.id.recycler_view_contacts);
         db = new DatabaseHelper(this);
@@ -117,5 +144,12 @@ public class MainActivity extends AppCompatActivity implements ContactsAdapter.O
             intent.putExtra(Contact.DATA_CONTACT, contact);
         }
         mStartForResult.launch(intent);
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (view.getId() == R.id.image_view_search) {
+            viewFlipper.setDisplayedChild(DISPLAY_SEARCH);
+        }
     }
 }

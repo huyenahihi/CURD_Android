@@ -68,6 +68,12 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.MyView
         notifyItemInserted(0);
     }
 
+    public void submitData(ArrayList contact) {
+        contactsList.clear();
+        contactsList.addAll(contact);
+        notifyDataSetChanged();
+    }
+
     public interface OnItemClickListener {
         void onItemClickListener(int position, Contact contact);
     }
