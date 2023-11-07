@@ -1,4 +1,4 @@
-package com.example.ja2.adapter;
+package com.example.ja2.ui.main;
 
 import android.annotation.SuppressLint;
 import android.view.LayoutInflater;

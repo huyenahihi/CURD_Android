@@ -30,7 +30,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ja2.R;
-import com.example.ja2.adapter.ContactsAdapter;
 import com.example.ja2.db.DatabaseHelper;
 import com.example.ja2.db.entity.Contact;
 import com.example.ja2.ui.detail.ContactActivity;
