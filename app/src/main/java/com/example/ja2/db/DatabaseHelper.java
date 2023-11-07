@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final int DATABASE_VERSION = 1;
-    private static final String DATABASE_NAME = "contact_db";
+    private static final String DATABASE_NAME = "hiker_db";
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -33,7 +33,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(sqLiteDatabase);
     }
 
-    // Getting Contact from DataBase
     public Parking getParking(long id) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(Parking.TABLE_NAME, new String[]{Parking.COLUMN_ID, Parking.COLUMN_NAME, Parking.COLUMN_EMAIL, Parking.COLUMN_DESCRIPTION, Parking.COLUMN_LOCATION, Parking.COLUMN_LENGTH, Parking.COLUMN_LEVEL}, Parking.COLUMN_ID + "=?", new String[]{String.valueOf(id)}, null, null, null, null);
@@ -50,7 +49,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return parking;
     }
 
-    // Getting all Contacts
     public ArrayList<Parking> getListParking() {
         ArrayList<Parking> mData = new ArrayList<>();
         String selectQuery = "SELECT * FROM " + Parking.TABLE_NAME + " ORDER BY " + Parking.COLUMN_ID + " DESC";

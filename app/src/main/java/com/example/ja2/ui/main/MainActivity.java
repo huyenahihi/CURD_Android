@@ -53,16 +53,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (action.equals(ADD_PARKING)) {
                 Parking parking = intent.getParcelableExtra(Parking.DATA_PARKING);
                 adapter.addTheFirsItem(parking);
-                Toast.makeText(MainActivity.this, R.string.toast_message_create_contact_successful, Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, R.string.toast_message_create_parking_successful, Toast.LENGTH_LONG).show();
             } else if (action.equals(REMOVE_PARKING)) {
                 int position = intent.getIntExtra(DATA_POSITION, -1);
                 adapter.removeItem(position);
-                Toast.makeText(MainActivity.this, R.string.toast_message_remove_contact_successful, Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, R.string.toast_message_remove_parking_successful, Toast.LENGTH_LONG).show();
             } else if (action.equals(UPDATE_PARKING)) {
                 int position = intent.getIntExtra(DATA_POSITION, -1);
                 Parking parking = intent.getParcelableExtra(Parking.DATA_PARKING);
                 adapter.updatePosition(position, parking);
-                Toast.makeText(MainActivity.this, R.string.toast_message_update_contact_successful, Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, R.string.toast_message_update_parking_successful, Toast.LENGTH_LONG).show();
             }
         }
     });
@@ -103,10 +103,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             }
         });
-        // RecyclerVIew
         recyclerView = findViewById(R.id.recycler_view_parking);
         db = new DatabaseHelper(this);
-        // Contacts List
         parkingArrayList.addAll(db.getListParking());
         adapter = new ParkingAdapter(parkingArrayList, MainActivity.this);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());

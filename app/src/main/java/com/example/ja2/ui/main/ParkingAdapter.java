@@ -71,9 +71,9 @@ public class ParkingAdapter extends RecyclerView.Adapter<ParkingAdapter.MyViewHo
         notifyItemInserted(0);
     }
 
-    public void submitData(ArrayList contact) {
-        data.clear();
-        data.addAll(contact);
+    public void submitData(ArrayList mData) {
+        this.data.clear();
+        data.addAll(mData);
         notifyDataSetChanged();
     }
 

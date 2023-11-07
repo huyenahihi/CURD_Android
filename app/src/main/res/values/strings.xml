@@ -9,7 +9,7 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
-    <string name="validate_form_input_contact">Please input user name and password</string>
+    <string name="validate_form_input_task">Please input user name and password</string>
     <string name="title_list_parking_screen">List parking</string>
     <string name="title_add_parking_screen">Add parking</string>
     <string name="title_edit_parking_screen">Update parking</string>
@@ -19,9 +19,9 @@
     <string name="hint_input_location">Location(*)</string>
     <string name="hint_input_length">Length(*)</string>
     <string name="title_field_available">Available</string>
-    <string name="toast_message_create_contact_successful">Create parking successful</string>
-    <string name="toast_message_remove_contact_successful">Remove account successful</string>
-    <string name="toast_message_update_contact_successful">Update parking successful</string>
+    <string name="toast_message_create_parking_successful">Create parking successful</string>
+    <string name="toast_message_remove_parking_successful">Remove account successful</string>
+    <string name="toast_message_update_parking_successful">Update parking successful</string>
     <string name="title_dialog_confirm">Confirm dialog</string>
     <string name="message_dialog_confirm">Do you want to save data conntact?</string>
     <string name="button_confirm">Save</string>
@@ -36,5 +36,5 @@
     <string name="hint_input_date">dd/MM/YYYY</string>
     <string name="hint_input_time">HH/mm</string>
     <string name="title_button_save">Save</string>
-    <string name="validate_form_input_task">Error validate input form</string>
+    <string name="validate_form_input_parking">Error validate input form</string>
 </resources>

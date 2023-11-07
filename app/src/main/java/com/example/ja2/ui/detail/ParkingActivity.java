@@ -139,7 +139,7 @@ public class ParkingActivity extends AppCompatActivity implements View.OnClickLi
             String location = editTextLocation.getText().toString().trim();
             String height = editTextLength.getText().toString().trim();
             if (TextUtils.isEmpty(name) || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                Toast.makeText(ParkingActivity.this, R.string.validate_form_input_contact, Toast.LENGTH_LONG).show();
+                Toast.makeText(ParkingActivity.this, R.string.validate_form_input_parking, Toast.LENGTH_LONG).show();
             } else {
                 parking = new Parking();
                 parking.setName(name);
@@ -188,7 +188,7 @@ public class ParkingActivity extends AppCompatActivity implements View.OnClickLi
                 break;
             }
             case R.id.image_view_remove: {
-                Log.e("Tag", "--- remove contact");
+                Log.e("Tag", "--- remove task");
                 db.deleteParking(parking);
                 Intent intent = new Intent();
                 intent.setAction(REMOVE_PARKING);
@@ -205,7 +205,7 @@ public class ParkingActivity extends AppCompatActivity implements View.OnClickLi
                 String location = editTextLocation.getText().toString().trim();
                 String height = editTextLength.getText().toString().trim();
                 if (TextUtils.isEmpty(name) || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                    Toast.makeText(ParkingActivity.this, R.string.validate_form_input_contact, Toast.LENGTH_LONG).show();
+                    Toast.makeText(ParkingActivity.this, R.string.validate_form_input_task, Toast.LENGTH_LONG).show();
                 } else {
                     parking = new Parking();
                     parking.setName(name);
