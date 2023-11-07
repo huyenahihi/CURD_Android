@@ -9,13 +9,13 @@
     tools:showIn="@layout/activity_main">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view_contacts"
+        android:id="@+id/recycler_view_parking"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="@dimen/_8sdp"
         android:padding="@dimen/_8sdp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:itemCount="10"
-        tools:listitem="@layout/item_contact" />
+        tools:listitem="@layout/item_parking" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

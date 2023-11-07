@@ -77,6 +77,56 @@
         android:hint="@string/hint_input_email"
         app:layout_constraintTop_toBottomOf="@+id/edit_text_user_name" />
 
+    <EditText
+        android:id="@+id/edit_text_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/_4sdp"
+        android:hint="@string/hint_input_description"
+        app:layout_constraintTop_toBottomOf="@+id/edit_text_email" />
+
+    <EditText
+        android:id="@+id/edit_text_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/_4sdp"
+        android:hint="@string/hint_input_location"
+        app:layout_constraintTop_toBottomOf="@+id/edit_text_description" />
+
+    <EditText
+        android:id="@+id/edit_text_length"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/_4sdp"
+        android:hint="@string/hint_input_length"
+        android:inputType="numberDecimal"
+        app:layout_constraintTop_toBottomOf="@+id/edit_text_location" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guide_line_50"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <CheckBox
+        android:id="@+id/check_box_available"
+        android:layout_width="@dimen/_0sdp"
+        android:layout_height="wrap_content"
+        android:text="@string/title_field_available"
+        app:layout_constraintEnd_toStartOf="@+id/guide_line_50"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_text_length" />
+
+    <Spinner
+        android:id="@+id/spinner_level"
+        android:layout_width="@dimen/_0sdp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/check_box_available"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/guide_line_50"
+        app:layout_constraintTop_toTopOf="@+id/check_box_available" />
+
     <LinearLayout
         android:id="@+id/linear_layout_group_task"
         android:layout_width="match_parent"
@@ -86,7 +136,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_text_email">
+        app:layout_constraintTop_toBottomOf="@+id/check_box_available">
 
         <RelativeLayout
             android:id="@+id/relative_layout_title_observation"

@@ -6,7 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.example.ja2.db.entity.Contact;
+import com.example.ja2.db.entity.Parking;
 import com.example.ja2.db.entity.Task;
 
 import java.util.ArrayList;
@@ -22,91 +22,111 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL(Contact.CREATE_TABLE);
+        sqLiteDatabase.execSQL(Parking.CREATE_TABLE);
         sqLiteDatabase.execSQL(Task.CREATE_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Contact.TABLE_NAME);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Parking.TABLE_NAME);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Task.TABLE_NAME);
         onCreate(sqLiteDatabase);
     }
 
     // Getting Contact from DataBase
-    public Contact getContact(long id) {
+    public Parking getParking(long id) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(Contact.TABLE_NAME, new String[]{Contact.COLUMN_ID, Contact.COLUMN_NAME, Contact.COLUMN_EMAIL}, Contact.COLUMN_ID + "=?", new String[]{String.valueOf(id)}, null, null, null, null);
+        Cursor cursor = db.query(Parking.TABLE_NAME, new String[]{Parking.COLUMN_ID, Parking.COLUMN_NAME, Parking.COLUMN_EMAIL, Parking.COLUMN_DESCRIPTION, Parking.COLUMN_LOCATION, Parking.COLUMN_LENGTH, Parking.COLUMN_LEVEL}, Parking.COLUMN_ID + "=?", new String[]{String.valueOf(id)}, null, null, null, null);
         if (cursor != null) cursor.moveToFirst();
-        Contact contact = new Contact(cursor.getString(cursor.getColumnIndexOrThrow(Contact.COLUMN_NAME)), cursor.getString(cursor.getColumnIndexOrThrow(Contact.COLUMN_EMAIL)), cursor.getInt(cursor.getColumnIndexOrThrow(Contact.COLUMN_ID)));
+        Parking parking = new Parking();
+        parking.setId(cursor.getInt(cursor.getColumnIndexOrThrow(Parking.COLUMN_ID)));
+        parking.setName(cursor.getString(cursor.getColumnIndexOrThrow(Parking.COLUMN_NAME)));
+        parking.setEmail(cursor.getString(cursor.getColumnIndexOrThrow(Parking.COLUMN_EMAIL)));
+        parking.setDescription(cursor.getString(cursor.getColumnIndexOrThrow(Parking.COLUMN_DESCRIPTION)));
+        parking.setLocation(cursor.getString(cursor.getColumnIndexOrThrow(Parking.COLUMN_LOCATION)));
+        parking.setLength(cursor.getDouble(cursor.getColumnIndexOrThrow(Parking.COLUMN_LENGTH)));
+        parking.setLevel(cursor.getInt(cursor.getColumnIndexOrThrow(Parking.COLUMN_LEVEL)));
         cursor.close();
-        return contact;
+        return parking;
     }
 
     // Getting all Contacts
-    public ArrayList<Contact> getAllContacts() {
-        ArrayList<Contact> contacts = new ArrayList<>();
-        String selectQuery = "SELECT * FROM " + Contact.TABLE_NAME + " ORDER BY " + Contact.COLUMN_ID + " DESC";
+    public ArrayList<Parking> getListParking() {
+        ArrayList<Parking> mData = new ArrayList<>();
+        String selectQuery = "SELECT * FROM " + Parking.TABLE_NAME + " ORDER BY " + Parking.COLUMN_ID + " DESC";
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {
             do {
-                Contact contact = new Contact();
-                contact.setId(cursor.getInt(cursor.getColumnIndexOrThrow(Contact.COLUMN_ID)));
-                contact.setName(cursor.getString(cursor.getColumnIndexOrThrow(Contact.COLUMN_NAME)));
-                contact.setEmail(cursor.getString(cursor.getColumnIndexOrThrow(Contact.COLUMN_EMAIL)));
-                contacts.add(contact);
+                Parking parking = new Parking();
+                parking.setId(cursor.getInt(cursor.getColumnIndexOrThrow(Parking.COLUMN_ID)));
+                parking.setName(cursor.getString(cursor.getColumnIndexOrThrow(Parking.COLUMN_NAME)));
+                parking.setEmail(cursor.getString(cursor.getColumnIndexOrThrow(Parking.COLUMN_EMAIL)));
+                parking.setDescription(cursor.getString(cursor.getColumnIndexOrThrow(Parking.COLUMN_DESCRIPTION)));
+                parking.setLocation(cursor.getString(cursor.getColumnIndexOrThrow(Parking.COLUMN_LOCATION)));
+                parking.setLength(cursor.getDouble(cursor.getColumnIndexOrThrow(Parking.COLUMN_LENGTH)));
+                parking.setLevel(cursor.getInt(cursor.getColumnIndexOrThrow(Parking.COLUMN_LEVEL)));
+                mData.add(parking);
             } while (cursor.moveToNext());
         }
         db.close();
-        return contacts;
+        return mData;
     }
 
     // Insert Data into Database
-    public long insertContact(Contact contact) {
+    public long insertParking(Parking parking) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(Contact.COLUMN_NAME, contact.getName());
-        values.put(Contact.COLUMN_EMAIL, contact.getEmail());
-        long id = db.insert(Contact.TABLE_NAME, null, values);
+        values.put(Parking.COLUMN_NAME, parking.getName());
+        values.put(Parking.COLUMN_EMAIL, parking.getEmail());
+        values.put(Parking.COLUMN_DESCRIPTION, parking.getDescription());
+        values.put(Parking.COLUMN_LOCATION, parking.getLocation());
+        values.put(Parking.COLUMN_LENGTH, parking.getLength());
+        values.put(Parking.COLUMN_LEVEL, parking.getLevel());
+        long id = db.insert(Parking.TABLE_NAME, null, values);
         db.close();
         return id;
     }
 
-    public int updateContact(Contact contact) {
+    public int updateParking(Parking parking) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(Contact.COLUMN_NAME, contact.getName());
-        values.put(Contact.COLUMN_EMAIL, contact.getEmail());
-//        return db.update(Contact.TABLE_NAME, values,Contact.COLUMN_ID+ " = ? ",
-//                new String[]{String.valueOf(contact.getId())});
-        int rowsUpdated = db.update(Contact.TABLE_NAME, values, Contact.COLUMN_ID + " = ? ", new String[]{String.valueOf(contact.getId())});
+        values.put(Parking.COLUMN_NAME, parking.getName());
+        values.put(Parking.COLUMN_EMAIL, parking.getEmail());
+        values.put(Parking.COLUMN_DESCRIPTION, parking.getDescription());
+        values.put(Parking.COLUMN_LOCATION, parking.getLocation());
+        values.put(Parking.COLUMN_LENGTH, parking.getLength());
+        values.put(Parking.COLUMN_LEVEL, parking.getLevel());
+        int rowsUpdated = db.update(Parking.TABLE_NAME, values, Parking.COLUMN_ID + " = ? ", new String[]{String.valueOf(parking.getId())});
         db.close(); // Close the database
         return rowsUpdated;
     }
 
-    public void deleteContact(Contact contact) {
+    public void deleteParking(Parking parking) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(Contact.TABLE_NAME, Contact.COLUMN_ID + " = ?", new String[]{String.valueOf(contact.getId())});
+        db.delete(Parking.TABLE_NAME, Parking.COLUMN_ID + " = ?", new String[]{String.valueOf(parking.getId())});
         db.close();
     }
 
-    public ArrayList<Contact> searchContacts(String keyword) {
-        ArrayList<Contact> contacts = new ArrayList<>();
-        String selectQuery = "SELECT * FROM " + Contact.TABLE_NAME + " WHERE " + Contact.COLUMN_NAME + " LIKE '%" + keyword + "%' OR " + Contact.COLUMN_EMAIL + " LIKE '%" + keyword + "%' ORDER BY " + Contact.COLUMN_ID + " DESC";
+    public ArrayList<Parking> searchParking(String keyword) {
+        ArrayList<Parking> parkings = new ArrayList<>();
+        String selectQuery = "SELECT * FROM " + Parking.TABLE_NAME + " WHERE " + Parking.COLUMN_NAME + " LIKE '%" + keyword + "%' OR " + Parking.COLUMN_EMAIL + " LIKE '%" + keyword + "%' " +
+                "OR " +  Parking.COLUMN_LOCATION + " LIKE '%" + keyword + "%' "+
+                "OR " +  Parking.COLUMN_LENGTH + " LIKE '%" + keyword + "%' "+
+        " ORDER BY " + Parking.COLUMN_ID + " DESC";
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {
             do {
-                Contact contact = new Contact();
-                contact.setId(cursor.getInt(cursor.getColumnIndexOrThrow(Contact.COLUMN_ID)));
-                contact.setName(cursor.getString(cursor.getColumnIndexOrThrow(Contact.COLUMN_NAME)));
-                contact.setEmail(cursor.getString(cursor.getColumnIndexOrThrow(Contact.COLUMN_EMAIL)));
-                contacts.add(contact);
+                Parking parking = new Parking();
+                parking.setId(cursor.getInt(cursor.getColumnIndexOrThrow(Parking.COLUMN_ID)));
+                parking.setName(cursor.getString(cursor.getColumnIndexOrThrow(Parking.COLUMN_NAME)));
+                parking.setEmail(cursor.getString(cursor.getColumnIndexOrThrow(Parking.COLUMN_EMAIL)));
+                parkings.add(parking);
             } while (cursor.moveToNext());
         }
         db.close();
-        return contacts;
+        return parkings;
     }
 
     public ArrayList<Task> getListTask(long uid) {

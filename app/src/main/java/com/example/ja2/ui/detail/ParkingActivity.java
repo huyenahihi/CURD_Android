@@ -1,6 +1,6 @@
 package com.example.ja2.ui.detail;
 
-import static com.example.ja2.db.entity.Contact.DATA_CONTACT;
+import static com.example.ja2.db.entity.Parking.DATA_PARKING;
 import static com.example.ja2.ui.task.TaskActivity.ADD_TASK;
 import static com.example.ja2.ui.task.TaskActivity.REMOVE_TASK;
 import static com.example.ja2.ui.task.TaskActivity.UPDATE_TASK;
@@ -14,6 +14,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -28,7 +29,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ja2.R;
 import com.example.ja2.db.DatabaseHelper;
-import com.example.ja2.db.entity.Contact;
+import com.example.ja2.db.entity.Parking;
 import com.example.ja2.db.entity.Task;
 import com.example.ja2.ui.task.TaskActivity;
 import com.example.ja2.ui.task.TaskAdapter;
@@ -38,19 +39,23 @@ import java.util.ArrayList;
 /**
  * @noinspection deprecation
  */
-public class ContactActivity extends AppCompatActivity implements View.OnClickListener, TaskAdapter.OnItemClickListener {
+public class ParkingActivity extends AppCompatActivity implements View.OnClickListener, TaskAdapter.OnItemClickListener {
 
     public static final String DATA_POSITION = "DATA_POSITION";
-    public static final String REMOVE_CONTACT = "REMOVE_CONTACT";
-    public static final String ADD_CONTACT = "ADD_CONTACT";
-    public static final String UPDATE_CONTACT = "UPDATE_CONTACT";
-    private Contact contact = null;
+    public static final String REMOVE_PARKING = "REMOVE_PARKING";
+    public static final String ADD_PARKING = "ADD_PARKING";
+    public static final String UPDATE_PARKING = "UPDATE_PARKING";
+    private Parking parking = null;
     private int position = -1;
     private TextView textViewTitleScreen = null;
     private ImageView imageViewRemove = null;
     private ImageView imageViewAdd = null;
     private EditText editTextUserName = null;
     private EditText editTextEmail = null;
+    private EditText editTextDescription = null;
+    private EditText editTextLocation = null;
+    private EditText editTextLength = null;
+    private CheckBox checkBoxAvailable = null;
     private LinearLayout linearLayoutGroupTask = null;
     private RecyclerView recyclerViewTask = null;
     private TaskAdapter adapter = null;
@@ -80,33 +85,41 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_contact);
+        setContentView(R.layout.activity_parking);
         db = new DatabaseHelper(this);
-        contact = getIntent().getParcelableExtra(DATA_CONTACT, Contact.class);
-        position = getIntent().getIntExtra(ContactActivity.DATA_POSITION, -1);
+        parking = getIntent().getParcelableExtra(DATA_PARKING, Parking.class);
+        position = getIntent().getIntExtra(ParkingActivity.DATA_POSITION, -1);
         textViewTitleScreen = findViewById(R.id.text_view_title_screen);
         imageViewRemove = findViewById(R.id.image_view_remove);
         imageViewAdd = findViewById(R.id.image_view_add);
         editTextUserName = findViewById(R.id.edit_text_user_name);
         editTextEmail = findViewById(R.id.edit_text_email);
+        editTextDescription = findViewById(R.id.edit_text_description);
+        editTextLocation = findViewById(R.id.edit_text_location);
+        editTextLength = findViewById(R.id.edit_text_length);
+        checkBoxAvailable = findViewById(R.id.check_box_available);
         linearLayoutGroupTask = findViewById(R.id.linear_layout_group_task);
         recyclerViewTask = findViewById(R.id.recycler_view_task);
         recyclerViewTask.setNestedScrollingEnabled(true);
         recyclerViewTask.setHasFixedSize(true);
-        if (contact != null) {
-            Log.e("Tag", "--- update: " + contact);
-            textViewTitleScreen.setText(R.string.title_edit_contact_screen);
-            editTextUserName.setText(contact.getName());
-            editTextEmail.setText(contact.getEmail());
+        if (parking != null) {
+            Log.e("Tag", "--- update: " + parking);
+            textViewTitleScreen.setText(R.string.title_edit_parking_screen);
+            editTextUserName.setText(parking.getName());
+            editTextEmail.setText(parking.getEmail());
+            editTextDescription.setText(parking.getDescription());
+            editTextLocation.setText(parking.getLocation());
+            editTextLength.setText(String.valueOf(parking.getLength()));
+            checkBoxAvailable.setSelected(parking.getAvailable());
             imageViewRemove.setVisibility(View.VISIBLE);
             imageViewAdd.setVisibility(View.GONE);
             linearLayoutGroupTask.setVisibility(View.VISIBLE);
-            ArrayList mDataTask = db.getListTask(contact.getId());
+            ArrayList mDataTask = db.getListTask(parking.getId());
             adapter = new TaskAdapter(mDataTask, this);
             recyclerViewTask.setAdapter(adapter);
         } else {
-            Log.e("Tag", "--- create new account");
-            textViewTitleScreen.setText(R.string.title_add_contact_screen);
+            Log.e("Tag", "--- create new parking");
+            textViewTitleScreen.setText(R.string.title_add_parking_screen);
             imageViewRemove.setVisibility(View.GONE);
             imageViewAdd.setVisibility(View.VISIBLE);
             linearLayoutGroupTask.setVisibility(View.GONE);
@@ -123,21 +136,26 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
             Intent intent = new Intent();
             String name = editTextUserName.getText().toString().trim();
             String email = editTextEmail.getText().toString().trim();
+            String description = editTextDescription.getText().toString().trim();
+            String location = editTextLocation.getText().toString().trim();
+            String height = editTextLength.getText().toString().trim();
             if (TextUtils.isEmpty(name) || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                Toast.makeText(ContactActivity.this, R.string.validate_form_input_contact, Toast.LENGTH_LONG).show();
+                Toast.makeText(ParkingActivity.this, R.string.validate_form_input_contact, Toast.LENGTH_LONG).show();
             } else {
                 if (position != -1) {
-                    contact.setName(name);
-                    contact.setEmail(email);
-                    db.updateContact(contact);
-                    intent.setAction(UPDATE_CONTACT);
-                    intent.putExtra(ContactActivity.DATA_POSITION, position);
-                    intent.putExtra(DATA_CONTACT, contact);
+                    parking.setName(name);
+                    parking.setEmail(email);
+                    db.updateParking(parking);
+                    intent.setAction(UPDATE_PARKING);
+                    intent.putExtra(ParkingActivity.DATA_POSITION, position);
+                    intent.putExtra(DATA_PARKING, parking);
                 } else {
-                    contact = new Contact(name, email);
-                    db.insertContact(contact);
-                    intent.setAction(ADD_CONTACT);
-                    intent.putExtra(DATA_CONTACT, contact);
+                    parking = new Parking();
+                    parking.setName(name);
+                    parking.setEmail(email);
+                    db.insertParking(parking);
+                    intent.setAction(ADD_PARKING);
+                    intent.putExtra(DATA_PARKING, parking);
                 }
                 setResult(Activity.RESULT_OK, intent);
                 finish();
@@ -170,11 +188,11 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
             }
             case R.id.image_view_remove: {
                 Log.e("Tag", "--- remove contact");
-                db.deleteContact(contact);
+                db.deleteParking(parking);
                 Intent intent = new Intent();
-                intent.setAction(REMOVE_CONTACT);
-                intent.putExtra(ContactActivity.DATA_POSITION, position);
-                intent.putExtra(DATA_CONTACT, contact);
+                intent.setAction(REMOVE_PARKING);
+                intent.putExtra(ParkingActivity.DATA_POSITION, position);
+                intent.putExtra(DATA_PARKING, parking);
                 setResult(Activity.RESULT_OK, intent);
                 finish();
                 break;
@@ -183,16 +201,18 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
                 String name = editTextUserName.getText().toString().trim();
                 String email = editTextEmail.getText().toString().trim();
                 if (TextUtils.isEmpty(name) || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                    Toast.makeText(ContactActivity.this, R.string.validate_form_input_contact, Toast.LENGTH_LONG).show();
+                    Toast.makeText(ParkingActivity.this, R.string.validate_form_input_contact, Toast.LENGTH_LONG).show();
                 } else {
-                    contact = new Contact(name, email);
-                    long id = db.insertContact(contact);
-                    Contact contact = db.getContact(id);
-                    if (contact != null) {
-                        Log.e("Tag", "--- add contact");
+                    parking = new Parking();
+                    parking.setName(name);
+                    parking.setEmail(email);
+                    long id = db.insertParking(parking);
+                    Parking parking = db.getParking(id);
+                    if (parking != null) {
+                        Log.e("Tag", "--- add parking");
                         Intent intent = new Intent();
-                        intent.setAction(ADD_CONTACT);
-                        intent.putExtra(DATA_CONTACT, contact);
+                        intent.setAction(ADD_PARKING);
+                        intent.putExtra(DATA_PARKING, parking);
                         setResult(Activity.RESULT_OK, intent);
                         finish();
                     }
@@ -200,9 +220,9 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
                 break;
             }
             case R.id.image_view_edit: {
-                Intent intent = new Intent(ContactActivity.this, TaskActivity.class);
+                Intent intent = new Intent(ParkingActivity.this, TaskActivity.class);
                 Task task = new Task();
-                task.setUID(contact.getId());
+                task.setUID(parking.getId());
                 intent.putExtra(Task.DATA_TASK, task);
                 mStartForResultTask.launch(intent);
                 break;
@@ -216,7 +236,7 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onItemClickListener(int position, Task task) {
         Log.e("Tag", "--- navigate to edit task: " + task.getId());
-        Intent intent = new Intent(ContactActivity.this, TaskActivity.class);
+        Intent intent = new Intent(ParkingActivity.this, TaskActivity.class);
         intent.putExtra(TaskActivity.DATA_POSITION, position);
         intent.putExtra(Task.DATA_TASK, task);
         mStartForResultTask.launch(intent);

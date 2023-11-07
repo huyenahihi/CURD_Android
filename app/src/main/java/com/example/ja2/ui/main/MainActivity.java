@@ -1,9 +1,9 @@
 package com.example.ja2.ui.main;
 
-import static com.example.ja2.ui.detail.ContactActivity.ADD_CONTACT;
-import static com.example.ja2.ui.detail.ContactActivity.DATA_POSITION;
-import static com.example.ja2.ui.detail.ContactActivity.REMOVE_CONTACT;
-import static com.example.ja2.ui.detail.ContactActivity.UPDATE_CONTACT;
+import static com.example.ja2.ui.detail.ParkingActivity.ADD_PARKING;
+import static com.example.ja2.ui.detail.ParkingActivity.DATA_POSITION;
+import static com.example.ja2.ui.detail.ParkingActivity.REMOVE_PARKING;
+import static com.example.ja2.ui.detail.ParkingActivity.UPDATE_PARKING;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -31,37 +31,37 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ja2.R;
 import com.example.ja2.db.DatabaseHelper;
-import com.example.ja2.db.entity.Contact;
-import com.example.ja2.ui.detail.ContactActivity;
+import com.example.ja2.db.entity.Parking;
+import com.example.ja2.ui.detail.ParkingActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, ContactsAdapter.OnItemClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, ParkingAdapter.OnItemClickListener {
 
     private final int DISPLAY_NORMAL = 0;
     private final int DISPLAY_SEARCH = 1;
-    private final ArrayList<Contact> contactArrayList = new ArrayList<>();
+    private final ArrayList<Parking> parkingArrayList = new ArrayList<>();
     private ViewFlipper viewFlipper = null;
     private EditText editTextQuery = null;
-    private ContactsAdapter contactsAdapter;
+    private ParkingAdapter adapter;
     @SuppressLint("NewApi")
     ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         if (result.getResultCode() == Activity.RESULT_OK) {
             Intent intent = result.getData();
             String action = intent.getAction();
-            if (action.equals(ADD_CONTACT)) {
-                Contact contact = intent.getParcelableExtra(Contact.DATA_CONTACT, Contact.class);
-                contactsAdapter.addTheFirsItem(contact);
+            if (action.equals(ADD_PARKING)) {
+                Parking parking = intent.getParcelableExtra(Parking.DATA_PARKING, Parking.class);
+                adapter.addTheFirsItem(parking);
                 Toast.makeText(MainActivity.this, R.string.toast_message_create_contact_successful, Toast.LENGTH_LONG).show();
-            } else if (action.equals(REMOVE_CONTACT)) {
+            } else if (action.equals(REMOVE_PARKING)) {
                 int position = intent.getIntExtra(DATA_POSITION, -1);
-                contactsAdapter.removeItem(position);
+                adapter.removeItem(position);
                 Toast.makeText(MainActivity.this, R.string.toast_message_remove_contact_successful, Toast.LENGTH_LONG).show();
-            } else if (action.equals(UPDATE_CONTACT)) {
+            } else if (action.equals(UPDATE_PARKING)) {
                 int position = intent.getIntExtra(DATA_POSITION, -1);
-                Contact contact = intent.getParcelableExtra(Contact.DATA_CONTACT, Contact.class);
-                contactsAdapter.updatePosition(position, contact);
+                Parking parking = intent.getParcelableExtra(Parking.DATA_PARKING, Parking.class);
+                adapter.updatePosition(position, parking);
                 Toast.makeText(MainActivity.this, R.string.toast_message_update_contact_successful, Toast.LENGTH_LONG).show();
             }
         }
@@ -88,12 +88,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     String keyword = s.toString().trim();
                     ArrayList mDataSearch = null;
                     if(!TextUtils.isEmpty(keyword)) {
-                        mDataSearch = db.searchContacts(keyword);
+                        mDataSearch = db.searchParking(keyword);
                     } else {
+                        viewFlipper.setDisplayedChild(DISPLAY_NORMAL);
                         Log.e("Tag", "--- search key: " + keyword);
-                        mDataSearch = db.getAllContacts();
+                        mDataSearch = db.getListParking();
                     }
-                    contactsAdapter.submitData(mDataSearch);
+                    adapter.submitData(mDataSearch);
                 }, 250);
             }
 
@@ -103,18 +104,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
         // RecyclerVIew
-        recyclerView = findViewById(R.id.recycler_view_contacts);
+        recyclerView = findViewById(R.id.recycler_view_parking);
         db = new DatabaseHelper(this);
         // Contacts List
-        contactArrayList.addAll(db.getAllContacts());
-        contactsAdapter = new ContactsAdapter(contactArrayList, MainActivity.this);
+        parkingArrayList.addAll(db.getListParking());
+        adapter = new ParkingAdapter(parkingArrayList, MainActivity.this);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(contactsAdapter);
+        recyclerView.setAdapter(adapter);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(view -> {
-            Intent intent = new Intent(MainActivity.this, ContactActivity.class);
+            Intent intent = new Intent(MainActivity.this, ParkingActivity.class);
             mStartForResult.launch(intent);
         });
     }
@@ -136,11 +137,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    public void onItemClickListener(int position, Contact contact) {
-        Intent intent = new Intent(MainActivity.this, ContactActivity.class);
-        if (contact != null) {
+    public void onItemClickListener(int position, Parking parking) {
+        Intent intent = new Intent(MainActivity.this, ParkingActivity.class);
+        if (parking != null) {
             intent.putExtra(DATA_POSITION, position);
-            intent.putExtra(Contact.DATA_CONTACT, contact);
+            intent.putExtra(Parking.DATA_PARKING, parking);
         }
         mStartForResult.launch(intent);
     }
