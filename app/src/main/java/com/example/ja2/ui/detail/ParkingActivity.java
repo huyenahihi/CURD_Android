@@ -110,7 +110,7 @@ public class ParkingActivity extends AppCompatActivity implements View.OnClickLi
             editTextDescription.setText(parking.getDescription());
             editTextLocation.setText(parking.getLocation());
             editTextLength.setText(String.valueOf(parking.getLength()));
-            checkBoxAvailable.setSelected(parking.getAvailable());
+            checkBoxAvailable.setChecked(parking.getAvailable());
             imageViewRemove.setVisibility(View.VISIBLE);
             imageViewAdd.setVisibility(View.GONE);
             linearLayoutGroupTask.setVisibility(View.VISIBLE);
@@ -142,17 +142,19 @@ public class ParkingActivity extends AppCompatActivity implements View.OnClickLi
             if (TextUtils.isEmpty(name) || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                 Toast.makeText(ParkingActivity.this, R.string.validate_form_input_contact, Toast.LENGTH_LONG).show();
             } else {
+                parking.setName(name);
+                parking.setEmail(email);
+                parking.setDescription(description);
+                parking.setLocation(location);
+                parking.setLength(Double.valueOf(height));
+                parking.setAvailable(checkBoxAvailable.isChecked());
                 if (position != -1) {
-                    parking.setName(name);
-                    parking.setEmail(email);
                     db.updateParking(parking);
                     intent.setAction(UPDATE_PARKING);
                     intent.putExtra(ParkingActivity.DATA_POSITION, position);
                     intent.putExtra(DATA_PARKING, parking);
                 } else {
                     parking = new Parking();
-                    parking.setName(name);
-                    parking.setEmail(email);
                     db.insertParking(parking);
                     intent.setAction(ADD_PARKING);
                     intent.putExtra(DATA_PARKING, parking);
@@ -200,12 +202,19 @@ public class ParkingActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.image_view_add: {
                 String name = editTextUserName.getText().toString().trim();
                 String email = editTextEmail.getText().toString().trim();
+                String description = editTextDescription.getText().toString().trim();
+                String location = editTextLocation.getText().toString().trim();
+                String height = editTextLength.getText().toString().trim();
                 if (TextUtils.isEmpty(name) || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                     Toast.makeText(ParkingActivity.this, R.string.validate_form_input_contact, Toast.LENGTH_LONG).show();
                 } else {
                     parking = new Parking();
                     parking.setName(name);
                     parking.setEmail(email);
+                    parking.setDescription(description);
+                    parking.setLocation(location);
+                    parking.setLength(Double.valueOf(height));
+                    parking.setAvailable(checkBoxAvailable.isChecked());
                     long id = db.insertParking(parking);
                     Parking parking = db.getParking(id);
                     if (parking != null) {

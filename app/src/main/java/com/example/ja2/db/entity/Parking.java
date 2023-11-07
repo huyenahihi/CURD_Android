@@ -179,4 +179,8 @@ public class Parking implements Parcelable {
         this.date = date;
     }
 
+    public String toString(){
+        return "Parking{" + "name = '" + name + '\'' + ",email = '" + email + "',description = '" + description + '\'' + ",location = '" + location + '\'' + ", available: " + available +"}";
+    }
+
 }
