@@ -59,13 +59,12 @@ public class ParkingActivity extends AppCompatActivity implements View.OnClickLi
     private LinearLayout linearLayoutGroupTask = null;
     private RecyclerView recyclerViewTask = null;
     private TaskAdapter adapter = null;
-    @SuppressLint("NewApi")
     ActivityResultLauncher<Intent> mStartForResultTask = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         if (result.getResultCode() == Activity.RESULT_OK) {
             Intent intent = result.getData();
             String action = intent.getAction();
             if (action.equals(ADD_TASK)) {
-                Task task = intent.getParcelableExtra(Task.DATA_TASK, Task.class);
+                Task task = intent.getParcelableExtra(Task.DATA_TASK);
                 adapter.addTheFirsItem(task);
                 recyclerViewTask.getLayoutManager().scrollToPosition(0);
             } else if (action.equals(REMOVE_TASK)) {
@@ -73,7 +72,7 @@ public class ParkingActivity extends AppCompatActivity implements View.OnClickLi
                 adapter.removeItem(position);
             } else if (action.equals(UPDATE_TASK)) {
                 int position = intent.getIntExtra(TaskActivity.DATA_POSITION, -1);
-                Task task = intent.getParcelableExtra(Task.DATA_TASK, Task.class);
+                Task task = intent.getParcelableExtra(Task.DATA_TASK);
                 adapter.updatePosition(position, task);
                 recyclerViewTask.getLayoutManager().scrollToPosition(position);
             }
@@ -87,7 +86,7 @@ public class ParkingActivity extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_parking);
         db = new DatabaseHelper(this);
-        parking = getIntent().getParcelableExtra(DATA_PARKING, Parking.class);
+        parking = getIntent().getParcelableExtra(DATA_PARKING);
         position = getIntent().getIntExtra(ParkingActivity.DATA_POSITION, -1);
         textViewTitleScreen = findViewById(R.id.text_view_title_screen);
         imageViewRemove = findViewById(R.id.image_view_remove);
@@ -142,6 +141,7 @@ public class ParkingActivity extends AppCompatActivity implements View.OnClickLi
             if (TextUtils.isEmpty(name) || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                 Toast.makeText(ParkingActivity.this, R.string.validate_form_input_contact, Toast.LENGTH_LONG).show();
             } else {
+                parking = new Parking();
                 parking.setName(name);
                 parking.setEmail(email);
                 parking.setDescription(description);
@@ -154,7 +154,6 @@ public class ParkingActivity extends AppCompatActivity implements View.OnClickLi
                     intent.putExtra(ParkingActivity.DATA_POSITION, position);
                     intent.putExtra(DATA_PARKING, parking);
                 } else {
-                    parking = new Parking();
                     db.insertParking(parking);
                     intent.setAction(ADD_PARKING);
                     intent.putExtra(DATA_PARKING, parking);

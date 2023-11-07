@@ -45,13 +45,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ViewFlipper viewFlipper = null;
     private EditText editTextQuery = null;
     private ParkingAdapter adapter;
-    @SuppressLint("NewApi")
+
     ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         if (result.getResultCode() == Activity.RESULT_OK) {
             Intent intent = result.getData();
             String action = intent.getAction();
             if (action.equals(ADD_PARKING)) {
-                Parking parking = intent.getParcelableExtra(Parking.DATA_PARKING, Parking.class);
+                Parking parking = intent.getParcelableExtra(Parking.DATA_PARKING);
                 adapter.addTheFirsItem(parking);
                 Toast.makeText(MainActivity.this, R.string.toast_message_create_contact_successful, Toast.LENGTH_LONG).show();
             } else if (action.equals(REMOVE_PARKING)) {
@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Toast.makeText(MainActivity.this, R.string.toast_message_remove_contact_successful, Toast.LENGTH_LONG).show();
             } else if (action.equals(UPDATE_PARKING)) {
                 int position = intent.getIntExtra(DATA_POSITION, -1);
-                Parking parking = intent.getParcelableExtra(Parking.DATA_PARKING, Parking.class);
+                Parking parking = intent.getParcelableExtra(Parking.DATA_PARKING);
                 adapter.updatePosition(position, parking);
                 Toast.makeText(MainActivity.this, R.string.toast_message_update_contact_successful, Toast.LENGTH_LONG).show();
             }

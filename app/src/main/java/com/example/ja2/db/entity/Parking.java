@@ -63,11 +63,7 @@ public class Parking implements Parcelable {
         description = in.readString();
         location = in.readString();
         available = in.readByte() != 0;
-        if (in.readByte() == 0) {
-            length = null;
-        } else {
-            length = in.readDouble();
-        }
+        length = in.readDouble();
         level = in.readInt();
         date = in.readLong();
     }
@@ -80,12 +76,7 @@ public class Parking implements Parcelable {
         dest.writeString(description);
         dest.writeString(location);
         dest.writeByte((byte) (available ? 1 : 0));
-        if (length == null) {
-            dest.writeByte((byte) 0);
-        } else {
-            dest.writeByte((byte) 1);
-            dest.writeDouble(length);
-        }
+        dest.writeDouble(length);
         dest.writeInt(level);
         dest.writeLong(date);
     }

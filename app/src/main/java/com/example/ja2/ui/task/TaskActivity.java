@@ -51,7 +51,6 @@ public class TaskActivity extends AppCompatActivity implements View.OnClickListe
     private Task task = null;
     private DatabaseHelper db;
 
-    @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,7 +64,7 @@ public class TaskActivity extends AppCompatActivity implements View.OnClickListe
         editTextNote = findViewById(R.id.edit_text_note);
         buttonSave = findViewById(R.id.button_save);
         position = getIntent().getIntExtra(DATA_POSITION, -1);
-        task = getIntent().getParcelableExtra(DATA_TASK, Task.class);
+        task = getIntent().getParcelableExtra(DATA_TASK);
         Log.e("Tag", "--- task: " + task.toString());
         db = new DatabaseHelper(this);
         if (position == -1) {
