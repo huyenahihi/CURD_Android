@@ -54,13 +54,12 @@ public class DetailParkingActivity extends AppCompatActivity implements View.OnC
     public static final String DATE_FORMAT = "dd/MM/yyyy";
     Calendar calendar = Calendar.getInstance();
     DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
-    private Parking parking = null;
+    private Parking parking = new Parking();
     private int position = -1;
     private TextView textViewTitleScreen = null;
     private ImageView imageViewRemove = null;
     private ImageView imageViewAdd = null;
     private EditText editTextUserName = null;
-    private EditText editTextEmail = null;
     private EditText editTextDescription = null;
     private EditText editTextLocation = null;
     private EditText editTextLength = null;
@@ -104,7 +103,6 @@ public class DetailParkingActivity extends AppCompatActivity implements View.OnC
         imageViewRemove = findViewById(R.id.image_view_remove);
         imageViewAdd = findViewById(R.id.image_view_add);
         editTextUserName = findViewById(R.id.edit_text_user_name);
-        editTextEmail = findViewById(R.id.edit_text_email);
         editTextDescription = findViewById(R.id.edit_text_description);
         editTextLocation = findViewById(R.id.edit_text_location);
         editTextLength = findViewById(R.id.edit_text_length);
@@ -123,10 +121,8 @@ public class DetailParkingActivity extends AppCompatActivity implements View.OnC
         adapterLevel = new LevelAdapter(mData);
         spinner.setAdapter(adapterLevel);
         if (parking != null) {
-            Log.e("Tag", "--- update: " + parking);
             textViewTitleScreen.setText(R.string.title_edit_parking_screen);
             editTextUserName.setText(parking.getName());
-            editTextEmail.setText(parking.getEmail());
             editTextDescription.setText(parking.getDescription());
             editTextLocation.setText(parking.getLocation());
             editTextLength.setText(String.valueOf(parking.getLength()));
@@ -159,16 +155,13 @@ public class DetailParkingActivity extends AppCompatActivity implements View.OnC
         builder.setPositiveButton(R.string.button_confirm, (dialog, which) -> {
             Intent intent = new Intent();
             String name = editTextUserName.getText().toString().trim();
-            String email = editTextEmail.getText().toString().trim();
             String description = editTextDescription.getText().toString().trim();
             String location = editTextLocation.getText().toString().trim();
             String height = editTextLength.getText().toString().trim();
-            if (TextUtils.isEmpty(name) || TextUtils.isEmpty(email) || TextUtils.isEmpty(location) || TextUtils.isEmpty(height) || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            if (TextUtils.isEmpty(name) || TextUtils.isEmpty(location) || TextUtils.isEmpty(height)) {
                 Toast.makeText(DetailParkingActivity.this, R.string.validate_form_input_parking, Toast.LENGTH_LONG).show();
             } else {
-                parking = new Parking();
                 parking.setName(name);
-                parking.setEmail(email);
                 parking.setDescription(description);
                 parking.setLocation(location);
                 parking.setLength(Double.valueOf(height));
@@ -176,7 +169,7 @@ public class DetailParkingActivity extends AppCompatActivity implements View.OnC
                 parking.setLevel(spinner.getSelectedItemPosition() + 1);
                 parking.setDate(calendar.getTimeInMillis());
                 if (position != -1) {
-                    db.updateParking(parking);
+                    int id = db.updateParking(parking);
                     intent.setAction(UPDATE_PARKING);
                     intent.putExtra(DetailParkingActivity.DATA_POSITION, position);
                     intent.putExtra(DATA_PARKING, parking);
@@ -205,11 +198,10 @@ public class DetailParkingActivity extends AppCompatActivity implements View.OnC
                     onBackPressed();
                 } else {
                     String name = editTextUserName.getText().toString().trim();
-                    String email = editTextEmail.getText().toString().trim();
                     String description = editTextDescription.getText().toString().trim();
                     String location = editTextLocation.getText().toString().trim();
                     String height = editTextLength.getText().toString().trim();
-                    if (TextUtils.isEmpty(name) || TextUtils.isEmpty(email) || TextUtils.isEmpty(location) || TextUtils.isEmpty(height) || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                    if (TextUtils.isEmpty(name) || TextUtils.isEmpty(location) || TextUtils.isEmpty(height)) {
                         finish();
                     } else {
                         onBackPressed();
@@ -230,16 +222,14 @@ public class DetailParkingActivity extends AppCompatActivity implements View.OnC
             }
             case R.id.image_view_add: {
                 String name = editTextUserName.getText().toString().trim();
-                String email = editTextEmail.getText().toString().trim();
                 String description = editTextDescription.getText().toString().trim();
                 String location = editTextLocation.getText().toString().trim();
                 String height = editTextLength.getText().toString().trim();
-                if (TextUtils.isEmpty(name) || TextUtils.isEmpty(email) || TextUtils.isEmpty(location) || TextUtils.isEmpty(height) || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                if (TextUtils.isEmpty(name) || TextUtils.isEmpty(location) || TextUtils.isEmpty(height)) {
                     Toast.makeText(DetailParkingActivity.this, R.string.validate_form_input_parking, Toast.LENGTH_LONG).show();
                 } else {
                     parking = new Parking();
                     parking.setName(name);
-                    parking.setEmail(email);
                     parking.setDescription(description);
                     parking.setLocation(location);
                     parking.setLength(Double.valueOf(height));

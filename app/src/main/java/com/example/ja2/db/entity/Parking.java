@@ -12,7 +12,6 @@ public class Parking implements Parcelable {
     public static final String TABLE_NAME = "tbl_parking";
     public static final String COLUMN_ID = "id";
     public static final String COLUMN_NAME = "name";
-    public static final String COLUMN_EMAIL = "email";
     public static final String COLUMN_DESCRIPTION = "description";
     public static final String COLUMN_LOCATION = "location";
     public static final String COLUMN_AVAILABLE = "available";
@@ -22,7 +21,6 @@ public class Parking implements Parcelable {
     public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME +
             "(" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
             + COLUMN_NAME + " TEXT,"
-            + COLUMN_EMAIL + " TEXT,"
             + COLUMN_DESCRIPTION + " TEXT,"
             + COLUMN_LOCATION + " TEXT,"
             + COLUMN_AVAILABLE + " BOOLEAN,"
@@ -32,11 +30,10 @@ public class Parking implements Parcelable {
     // 2- Variables
     private int id;
     private String name;
-    private String email;
     private String description;
     private String location;
     private boolean available;
-    private Double length;
+    private Double length = 0.0;
     private int level = 1;
     private long date = System.currentTimeMillis();
 
@@ -45,9 +42,8 @@ public class Parking implements Parcelable {
 
     }
 
-    public Parking(String name, String email, String description, String location, boolean available, Double length, int level, long date) {
+    public Parking(String name, String description, String location, boolean available, Double length, int level, long date) {
         this.name = name;
-        this.email = email;
         this.description = description;
         this.location = location;
         this.available = available;
@@ -59,7 +55,6 @@ public class Parking implements Parcelable {
     protected Parking(Parcel in) {
         id = in.readInt();
         name = in.readString();
-        email = in.readString();
         description = in.readString();
         location = in.readString();
         available = in.readByte() != 0;
@@ -72,7 +67,6 @@ public class Parking implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(id);
         dest.writeString(name);
-        dest.writeString(email);
         dest.writeString(description);
         dest.writeString(location);
         dest.writeByte((byte) (available ? 1 : 0));
@@ -114,13 +108,6 @@ public class Parking implements Parcelable {
         this.name = name;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
 
     public String getDescription() {
         return description;
@@ -171,7 +158,7 @@ public class Parking implements Parcelable {
     }
 
     public String toString(){
-        return "Parking{ 'id' = " + id  +",  name = '" + name + '\'' + ",email = '" + email + "',description = '" + description + '\'' + ",location = '" + location + '\'' + ", available: " + available +"}";
+        return "Parking{ 'id' = " + id  +",  name = '" + name + '\'' + ",description = '" + description + '\'' + ",location = '" + location + '\'' + ", available: " + available +"}";
     }
 
 }

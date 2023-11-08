@@ -52,7 +52,6 @@ public class ParkingAdapter extends RecyclerView.Adapter<ParkingAdapter.MyViewHo
         holder.textViewDate.setText(dateFormat.format(date));
         holder.textViewDistance.setText(holder.itemView.getContext().getString(R.string.general_distance, decimalFormat.format(parking.getLength())));
         holder.textViewName.setText(parking.getName());
-        holder.textViewEmail.setText(parking.getEmail());
         holder.textViewNote.setText(parking.getDescription());
         // Xử lý khi nút Chi tiết được bấm
         holder.itemView.setOnClickListener(view -> callBack.onItemClickListener(holder.getAdapterPosition(), parking));
@@ -100,7 +99,6 @@ public class ParkingAdapter extends RecyclerView.Adapter<ParkingAdapter.MyViewHo
         public TextView textViewDate;
         public TextView textViewDistance;
         public TextView textViewName;
-        public TextView textViewEmail;
         public TextView textViewNote;
 
         public MyViewHolder(@NonNull View itemView) {
@@ -108,7 +106,6 @@ public class ParkingAdapter extends RecyclerView.Adapter<ParkingAdapter.MyViewHo
             this.textViewDate = itemView.findViewById(R.id.text_view_date);
             this.textViewDistance = itemView.findViewById(R.id.text_view_distance);
             this.textViewName = itemView.findViewById(R.id.text_view_name);
-            this.textViewEmail = itemView.findViewById(R.id.text_view_email);
             this.textViewNote = itemView.findViewById(R.id.text_view_note);
         }
     }

@@ -10,7 +10,7 @@ public class Task implements Parcelable {
     public static final String DATA_TASK = "DATA_TASK";
     public static final String TABLE_NAME = "tbl_task";
     public static final String COLUMN_ID = "id";
-    public static final String COLUMN_UID = "uid";
+    public static final String COLUMN_PARKING_ID = "parking_id";
     public static final String COLUMN_NOTE = "note";
     public static final String COLUMN_DATE_TIME = "date_time";
 
@@ -31,8 +31,8 @@ public class Task implements Parcelable {
                     + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                     + COLUMN_NOTE + " TEXT,"
                     + COLUMN_DATE_TIME + " DATETIME DEFAULT CURRENT_TIMESTAMP,"
-                    + COLUMN_UID + " INTEGER, "
-                    + "FOREIGN KEY(" + COLUMN_UID + ") REFERENCES "+Parking.TABLE_NAME+"("+Parking.COLUMN_ID+")"
+                    + COLUMN_PARKING_ID + " INTEGER, "
+                    + "FOREIGN KEY(" + COLUMN_PARKING_ID + ") REFERENCES " + Parking.TABLE_NAME + "("+Parking.COLUMN_ID+")"
                     + ")";
     private long dateTime;
     private String note;

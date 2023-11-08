@@ -68,7 +68,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:barrierDirection="right"
-        app:constraint_referenced_ids="text_view_username, text_view_email, text_view_description, text_view_location" />
+        app:constraint_referenced_ids="text_view_username, text_view_description, text_view_location" />
 
     <TextView
         android:id="@+id/text_view_username"
@@ -92,27 +92,6 @@
         app:layout_constraintTop_toBottomOf="@+id/constraint_layout_toolbar" />
 
     <TextView
-        android:id="@+id/text_view_email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/_16sdp"
-        android:text="@string/hint_input_email"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/edit_text_email"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/edit_text_email" />
-
-    <EditText
-        android:id="@+id/edit_text_email"
-        android:layout_width="@dimen/_0sdp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/_16sdp"
-        android:layout_marginVertical="@dimen/_4sdp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/barrier"
-        app:layout_constraintTop_toBottomOf="@+id/edit_text_user_name" />
-
-    <TextView
         android:id="@+id/text_view_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -131,7 +110,7 @@
         android:layout_marginVertical="@dimen/_4sdp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/barrier"
-        app:layout_constraintTop_toBottomOf="@+id/edit_text_email" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_text_user_name" />
 
     <TextView
         android:id="@+id/text_view_location"

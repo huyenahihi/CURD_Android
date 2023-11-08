@@ -6,6 +6,7 @@ import static com.example.ja2.ui.detail.DetailParkingActivity.REMOVE_PARKING;
 import static com.example.ja2.ui.detail.DetailParkingActivity.UPDATE_PARKING;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,6 +17,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
@@ -87,11 +90,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     String keyword = s.toString().trim();
                     ArrayList mDataSearch = null;
                     if(!TextUtils.isEmpty(keyword)) {
+                        Log.e("Tag", "--- search key: " + keyword);
                         mDataSearch = db.searchParking(keyword);
                     } else {
                         viewFlipper.setDisplayedChild(DISPLAY_NORMAL);
-                        Log.e("Tag", "--- search key: " + keyword);
                         mDataSearch = db.getListParking();
+                        editTextQuery.clearFocus();
+                        InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(editTextQuery.getWindowToken(), 0);
                     }
                     adapter.submitData(mDataSearch);
                 }, 250);
@@ -144,6 +150,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.image_view_search) {
+            editTextQuery.setFocusable(true);
+            InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+            editTextQuery.requestFocus();
+            imm.showSoftInput(editTextQuery, InputMethodManager.SHOW_IMPLICIT);
             viewFlipper.setDisplayedChild(DISPLAY_SEARCH);
         }
     }

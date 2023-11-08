@@ -51,19 +51,11 @@
             tools:text="Name of" />
 
         <TextView
-            android:id="@+id/text_view_email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            app:layout_constraintTop_toBottomOf="@+id/text_view_name"
-            tools:text="Email" />
-
-        <TextView
             android:id="@+id/text_view_note"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="16sp"
-            app:layout_constraintTop_toBottomOf="@+id/text_view_email"
+            app:layout_constraintTop_toBottomOf="@+id/text_view_name"
             tools:text="Note" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
