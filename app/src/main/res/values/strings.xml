@@ -9,7 +9,7 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
-    <string name="validate_form_input_task">Please input form observation</string>
+    <string name="validate_form_input_observation">Please input form observation</string>
     <string name="title_list_hike_screen">List hike</string>
     <string name="title_add_hike_screen">Add hike</string>
     <string name="title_edit_hike_screen">Update hike</string>
@@ -31,8 +31,8 @@
     <string name="title_date">Date(*):</string>
     <string name="title_time">Time(*):</string>
     <string name="hint_input_note">Name of Obvervation</string>
-    <string name="title_add_task_screen">Create new observation</string>
-    <string name="title_update_task_screen">Update observation</string>
+    <string name="title_add_observation_screen">Create new observation</string>
+    <string name="title_update_observation_screen">Update observation</string>
     <string name="hint_input_date">dd/MM/YYYY</string>
     <string name="hint_input_time">HH/mm</string>
     <string name="title_button_save">Save</string>

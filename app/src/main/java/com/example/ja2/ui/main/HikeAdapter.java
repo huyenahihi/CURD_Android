@@ -19,7 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class ParkingAdapter extends RecyclerView.Adapter<ParkingAdapter.MyViewHolder> {
+public class HikeAdapter extends RecyclerView.Adapter<HikeAdapter.MyViewHolder> {
 
     private static final String DATE_FORMAT = "dd/MM/yyyy";
     private static final DecimalFormat decimalFormat = new DecimalFormat("###.###");
@@ -29,7 +29,7 @@ public class ParkingAdapter extends RecyclerView.Adapter<ParkingAdapter.MyViewHo
     DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
 
     //bo sung
-    public ParkingAdapter(ArrayList<Hike> data, OnItemClickListener callBack) {
+    public HikeAdapter(ArrayList<Hike> data, OnItemClickListener callBack) {
         this.data = data;
         this.callBack = callBack;
     }
@@ -37,7 +37,7 @@ public class ParkingAdapter extends RecyclerView.Adapter<ParkingAdapter.MyViewHo
     // tạo ra đối tượng ViewHolder, trong nó chứa View hiện thị dữ liệu
     @NonNull
     @Override
-    public ParkingAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public HikeAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // Nạp layout cho View biểu diễn phần tử cu the
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_hike, parent, false);
         return new MyViewHolder(itemView);
@@ -46,7 +46,7 @@ public class ParkingAdapter extends RecyclerView.Adapter<ParkingAdapter.MyViewHo
     //chuyển dữ liệu phần tử vào ViewHolder
     @Override
     @SuppressLint({"RecyclerView", "StringFormatInvalid"})
-    public void onBindViewHolder(@NonNull ParkingAdapter.MyViewHolder holder, int positions) {
+    public void onBindViewHolder(@NonNull HikeAdapter.MyViewHolder holder, int positions) {
         final Hike hike = data.get(holder.getAdapterPosition());
         Date date = new Date(hike.getDate());
         holder.textViewDate.setText(dateFormat.format(date));
@@ -79,7 +79,7 @@ public class ParkingAdapter extends RecyclerView.Adapter<ParkingAdapter.MyViewHo
         }
     }
 
-    public void addParking(int position, Hike hike) {
+    public void addHike(int position, Hike hike) {
         data.add(position, hike);
         notifyItemInserted(position);
     }

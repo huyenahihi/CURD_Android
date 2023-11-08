@@ -1,9 +1,9 @@
 package com.example.ja2.ui.detail;
 
 import static com.example.ja2.db.entity.Hike.DATA_HIKE;
-import static com.example.ja2.ui.task.ObservationActivity.ADD_TASK;
-import static com.example.ja2.ui.task.ObservationActivity.REMOVE_TASK;
-import static com.example.ja2.ui.task.ObservationActivity.UPDATE_TASK;
+import static com.example.ja2.ui.observation.ObservationActivity.ADD_TASK;
+import static com.example.ja2.ui.observation.ObservationActivity.REMOVE_TASK;
+import static com.example.ja2.ui.observation.ObservationActivity.UPDATE_TASK;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -31,8 +31,8 @@ import com.example.ja2.R;
 import com.example.ja2.db.DatabaseHelper;
 import com.example.ja2.db.entity.Hike;
 import com.example.ja2.db.entity.Observation;
-import com.example.ja2.ui.task.ObservationActivity;
-import com.example.ja2.ui.task.ObservationAdapter;
+import com.example.ja2.ui.observation.ObservationActivity;
+import com.example.ja2.ui.observation.ObservationAdapter;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.text.DateFormat;
@@ -47,9 +47,9 @@ import java.util.Date;
 public class DetailHikeActivity extends AppCompatActivity implements View.OnClickListener, ObservationAdapter.OnItemClickListener {
 
     public static final String DATA_POSITION = "DATA_POSITION";
-    public static final String REMOVE_HIKE = "REMOVE_PARKING";
-    public static final String ADD_HIKE = "ADD_PARKING";
-    public static final String UPDATE_HIKE = "UPDATE_PARKING";
+    public static final String REMOVE_HIKE = "REMOVE_HIKE";
+    public static final String ADD_HIKE = "ADD_HIKE";
+    public static final String UPDATE_HIKE = "UPDATE_HIKE";
     public static final String DATE_FORMAT = "dd/MM/yyyy";
     Calendar calendar = Calendar.getInstance();
     DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
@@ -137,7 +137,7 @@ public class DetailHikeActivity extends AppCompatActivity implements View.OnClic
             adapter = new ObservationAdapter(mDataTask, this);
             recyclerViewTask.setAdapter(adapter);
         } else {
-            Log.e("Tag", "--- create new parking");
+            Log.e("Tag", "--- create new hike");
             textViewTitleScreen.setText(R.string.title_add_hike_screen);
             imageViewRemove.setVisibility(View.GONE);
             imageViewAdd.setVisibility(View.VISIBLE);
@@ -238,7 +238,7 @@ public class DetailHikeActivity extends AppCompatActivity implements View.OnClic
                     long id = db.insertHike(this.hike);
                     Hike hike = db.getHike(id);
                     if (hike != null) {
-                        Log.e("Tag", "--- add parking: " + hike);
+                        Log.e("Tag", "--- add hike: " + hike);
                         Intent intent = new Intent();
                         intent.setAction(ADD_HIKE);
                         intent.putExtra(DATA_HIKE, hike);

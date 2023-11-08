@@ -1,4 +1,4 @@
-package com.example.ja2.ui.task;
+package com.example.ja2.ui.observation;
 
 import static com.example.ja2.db.entity.Observation.DATA_OBSERVATION;
 
@@ -65,17 +65,17 @@ public class ObservationActivity extends AppCompatActivity implements View.OnCli
         buttonSave = findViewById(R.id.button_save);
         position = getIntent().getIntExtra(DATA_POSITION, -1);
         observation = getIntent().getParcelableExtra(DATA_OBSERVATION);
-        Log.e("Tag", "--- task: " + observation.toString());
+        Log.e("Tag", "--- observation: " + observation.toString());
         db = new DatabaseHelper(this);
         if (position == -1) {
-            textViewTitleScreen.setText(R.string.title_add_task_screen);
+            textViewTitleScreen.setText(R.string.title_add_observation_screen);
             imageViewEdit.setSelected(true); //fill dữ liệu vào task
             imageViewDate.setEnabled(true);
             imageViewTime.setEnabled(true);
             buttonSave.setEnabled(true);
             editTextNote.setEnabled(true);
         } else { //ẩn tính năng, k cho update
-            textViewTitleScreen.setText(R.string.title_update_task_screen);
+            textViewTitleScreen.setText(R.string.title_update_observation_screen);
             imageViewEdit.setSelected(false);
             imageViewDate.setEnabled(false);
             imageViewTime.setEnabled(false);
@@ -160,7 +160,7 @@ public class ObservationActivity extends AppCompatActivity implements View.OnCli
                     setResult(Activity.RESULT_OK, intent);
                     onBackPressed();
                 } else {
-                    Toast.makeText(ObservationActivity.this, R.string.validate_form_input_task, Toast.LENGTH_LONG).show();
+                    Toast.makeText(ObservationActivity.this, R.string.validate_form_input_observation, Toast.LENGTH_LONG).show();
                 }
                 break;
             }

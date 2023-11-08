@@ -33,14 +33,14 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, ParkingAdapter.OnItemClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, HikeAdapter.OnItemClickListener {
 
     private final int DISPLAY_NORMAL = 0;
     private final int DISPLAY_SEARCH = 1;
     private final ArrayList<Hike> hikeArrayList = new ArrayList<>();
     private ViewFlipper viewFlipper = null;
     private EditText editTextQuery = null;
-    private ParkingAdapter adapter;
+    private HikeAdapter adapter;
     private RecyclerView recyclerView;
     //Màn nhận kết quả khi màn detailparking được add/edit/delete thành công dữ liệu
     ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             String action = intent.getAction();
             if (action.equals(ADD_HIKE)) {
                 Hike hike = intent.getParcelableExtra(Hike.DATA_HIKE);
-                adapter.addParking(0, hike);
+                adapter.addHike(0, hike);
                 recyclerView.getLayoutManager().scrollToPosition(0);
                 Toast.makeText(MainActivity.this, R.string.toast_message_create_hike_successful, Toast.LENGTH_LONG).show();
             } else if (action.equals(REMOVE_HIKE)) {
@@ -103,11 +103,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             }
         });
-        recyclerView = findViewById(R.id.recycler_view_parking);
+        recyclerView = findViewById(R.id.recycler_view_hike);
         db = new DatabaseHelper(this);
         hikeArrayList.addAll(db.getListHike());
         //gắn dữ liệu để đưa lên listview
-        adapter = new ParkingAdapter(hikeArrayList, MainActivity.this);
+        adapter = new HikeAdapter(hikeArrayList, MainActivity.this);
         recyclerView.setItemAnimator(new DefaultItemAnimator()); //hiển thị animation
         recyclerView.setAdapter(adapter); //
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);

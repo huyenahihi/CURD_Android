@@ -1,4 +1,4 @@
-package com.example.ja2.ui.task;
+package com.example.ja2.ui.observation;
 
 import android.view.LayoutInflater;
 import android.view.View;
