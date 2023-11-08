@@ -9,7 +9,7 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
-    <string name="validate_form_input_task">Please input user name and password</string>
+    <string name="validate_form_input_task">Please input form task</string>
     <string name="title_list_parking_screen">List parking</string>
     <string name="title_add_parking_screen">Add parking</string>
     <string name="title_edit_parking_screen">Update parking</string>

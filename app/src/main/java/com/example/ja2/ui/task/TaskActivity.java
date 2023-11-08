@@ -2,7 +2,6 @@ package com.example.ja2.ui.task;
 
 import static com.example.ja2.db.entity.Task.DATA_TASK;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -36,7 +35,7 @@ public class TaskActivity extends AppCompatActivity implements View.OnClickListe
     public static final String UPDATE_TASK = "UPDATE_TASK";
     public static final String DATE_FORMAT = "dd/MM/yyyy";
     public static final String TIME_FORMAT = "HH:ss";
-    Calendar now = Calendar.getInstance();
+    Calendar calendar = Calendar.getInstance();
     DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
     DateFormat timeFormat = new SimpleDateFormat(TIME_FORMAT);
     private int position = -1;
@@ -81,9 +80,9 @@ public class TaskActivity extends AppCompatActivity implements View.OnClickListe
             imageViewTime.setEnabled(false);
             editTextNote.setEnabled(false);
             buttonSave.setEnabled(false);
-            now.setTime(new Date(task.getDateTime()));
-            editTextDate.setText(dateFormat.format(now.getTime()));
-            editTextTime.setText(timeFormat.format(now.getTime()));
+            calendar.setTime(new Date(task.getDateTime()));
+            editTextDate.setText(dateFormat.format(calendar.getTime()));
+            editTextTime.setText(timeFormat.format(calendar.getTime()));
             editTextNote.setText(task.getNote());
             editTextNote.setEnabled(false);
         }
@@ -118,21 +117,21 @@ public class TaskActivity extends AppCompatActivity implements View.OnClickListe
             }
             case R.id.image_view_date: {
                 DatePickerDialog datePickerDialog = DatePickerDialog.newInstance((mView, year, monthOfYear, dayOfMonth) -> {
-                    now.set(Calendar.YEAR, year);
-                    now.set(Calendar.MONTH, monthOfYear);
-                    now.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                    editTextDate.setText(dateFormat.format(now.getTime()));
-                }, now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
+                    calendar.set(Calendar.YEAR, year);
+                    calendar.set(Calendar.MONTH, monthOfYear);
+                    calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                    editTextDate.setText(dateFormat.format(calendar.getTime()));
+                }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
                 datePickerDialog.show(getSupportFragmentManager(), "DatePickerDialog");
                 break;
             }
             case R.id.image_view_time: {
                 TimePickerDialog timePickerDialog = TimePickerDialog.newInstance((TimePickerDialog.OnTimeSetListener) (mView, hourOfDay, minute, second) -> {
-                    now.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                    now.set(Calendar.MINUTE, minute);
-                    now.set(Calendar.SECOND, second);
-                    editTextTime.setText(timeFormat.format(now.getTime()));
-                }, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), true);
+                    calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                    calendar.set(Calendar.MINUTE, minute);
+                    calendar.set(Calendar.SECOND, second);
+                    editTextTime.setText(timeFormat.format(calendar.getTime()));
+                }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true);
                 timePickerDialog.show(getSupportFragmentManager(), "TimePickerDialog");
                 break;
             }
@@ -143,13 +142,13 @@ public class TaskActivity extends AppCompatActivity implements View.OnClickListe
                 if (!TextUtils.isEmpty(date) && !TextUtils.isEmpty(time) && !TextUtils.isEmpty(note)) {
                     Intent intent = new Intent();
                     if (position == -1) {
-                        task.setDateTime(now.getTimeInMillis());
+                        task.setDateTime(calendar.getTimeInMillis());
                         task.setNote(note);
                         db.insertTask(task);
                         intent.setAction(ADD_TASK);
                         intent.putExtra(DATA_TASK, task);
                     } else {
-                        task.setDateTime(now.getTimeInMillis());
+                        task.setDateTime(calendar.getTimeInMillis());
                         task.setNote(note);
                         db.updateTask(task);
                         intent.setAction(UPDATE_TASK);

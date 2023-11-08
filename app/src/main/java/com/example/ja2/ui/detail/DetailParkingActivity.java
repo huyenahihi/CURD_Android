@@ -45,14 +45,14 @@ import java.util.Date;
 /**
  * @noinspection deprecation
  */
-public class ParkingActivity extends AppCompatActivity implements View.OnClickListener, TaskAdapter.OnItemClickListener {
+public class DetailParkingActivity extends AppCompatActivity implements View.OnClickListener, TaskAdapter.OnItemClickListener {
 
     public static final String DATA_POSITION = "DATA_POSITION";
     public static final String REMOVE_PARKING = "REMOVE_PARKING";
     public static final String ADD_PARKING = "ADD_PARKING";
     public static final String UPDATE_PARKING = "UPDATE_PARKING";
     public static final String DATE_FORMAT = "dd/MM/yyyy";
-    Calendar now = Calendar.getInstance();
+    Calendar calendar = Calendar.getInstance();
     DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
     private Parking parking = null;
     private int position = -1;
@@ -99,7 +99,7 @@ public class ParkingActivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_parking);
         db = new DatabaseHelper(this);
         parking = getIntent().getParcelableExtra(DATA_PARKING);
-        position = getIntent().getIntExtra(ParkingActivity.DATA_POSITION, -1);
+        position = getIntent().getIntExtra(DetailParkingActivity.DATA_POSITION, -1);
         textViewTitleScreen = findViewById(R.id.text_view_title_screen);
         imageViewRemove = findViewById(R.id.image_view_remove);
         imageViewAdd = findViewById(R.id.image_view_add);
@@ -133,7 +133,7 @@ public class ParkingActivity extends AppCompatActivity implements View.OnClickLi
             checkBoxAvailable.setChecked(parking.getAvailable());
             spinner.setSelection(parking.getLevel() - 1);
             Date date = new Date(parking.getDate());
-            now.setTime(date);
+            calendar.setTime(date);
             textViewDate.setText(dateFormat.format(date));
             imageViewRemove.setVisibility(View.VISIBLE);
             imageViewAdd.setVisibility(View.GONE);
@@ -164,7 +164,7 @@ public class ParkingActivity extends AppCompatActivity implements View.OnClickLi
             String location = editTextLocation.getText().toString().trim();
             String height = editTextLength.getText().toString().trim();
             if (TextUtils.isEmpty(name) || TextUtils.isEmpty(email) || TextUtils.isEmpty(location) || TextUtils.isEmpty(height) || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                Toast.makeText(ParkingActivity.this, R.string.validate_form_input_parking, Toast.LENGTH_LONG).show();
+                Toast.makeText(DetailParkingActivity.this, R.string.validate_form_input_parking, Toast.LENGTH_LONG).show();
             } else {
                 parking = new Parking();
                 parking.setName(name);
@@ -174,11 +174,11 @@ public class ParkingActivity extends AppCompatActivity implements View.OnClickLi
                 parking.setLength(Double.valueOf(height));
                 parking.setAvailable(checkBoxAvailable.isChecked());
                 parking.setLevel(spinner.getSelectedItemPosition() + 1);
-                parking.setDate(now.getTimeInMillis());
+                parking.setDate(calendar.getTimeInMillis());
                 if (position != -1) {
                     db.updateParking(parking);
                     intent.setAction(UPDATE_PARKING);
-                    intent.putExtra(ParkingActivity.DATA_POSITION, position);
+                    intent.putExtra(DetailParkingActivity.DATA_POSITION, position);
                     intent.putExtra(DATA_PARKING, parking);
                 } else {
                     db.insertParking(parking);
@@ -222,7 +222,7 @@ public class ParkingActivity extends AppCompatActivity implements View.OnClickLi
                 db.deleteParking(parking);
                 Intent intent = new Intent();
                 intent.setAction(REMOVE_PARKING);
-                intent.putExtra(ParkingActivity.DATA_POSITION, position);
+                intent.putExtra(DetailParkingActivity.DATA_POSITION, position);
                 intent.putExtra(DATA_PARKING, parking);
                 setResult(Activity.RESULT_OK, intent);
                 finish();
@@ -235,7 +235,7 @@ public class ParkingActivity extends AppCompatActivity implements View.OnClickLi
                 String location = editTextLocation.getText().toString().trim();
                 String height = editTextLength.getText().toString().trim();
                 if (TextUtils.isEmpty(name) || TextUtils.isEmpty(email) || TextUtils.isEmpty(location) || TextUtils.isEmpty(height) || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                    Toast.makeText(ParkingActivity.this, R.string.validate_form_input_task, Toast.LENGTH_LONG).show();
+                    Toast.makeText(DetailParkingActivity.this, R.string.validate_form_input_task, Toast.LENGTH_LONG).show();
                 } else {
                     parking = new Parking();
                     parking.setName(name);
@@ -245,7 +245,7 @@ public class ParkingActivity extends AppCompatActivity implements View.OnClickLi
                     parking.setLength(Double.valueOf(height));
                     parking.setAvailable(checkBoxAvailable.isChecked());
                     parking.setLevel(spinner.getSelectedItemPosition() + 1);
-                    parking.setDate(now.getTimeInMillis());
+                    parking.setDate(calendar.getTimeInMillis());
                     long id = db.insertParking(parking);
                     Parking parking = db.getParking(id);
                     if (parking != null) {
@@ -260,7 +260,7 @@ public class ParkingActivity extends AppCompatActivity implements View.OnClickLi
                 break;
             }
             case R.id.image_view_edit: {
-                Intent intent = new Intent(ParkingActivity.this, TaskActivity.class);
+                Intent intent = new Intent(DetailParkingActivity.this, TaskActivity.class);
                 Task task = new Task();
                 task.setUID(parking.getId());
                 intent.putExtra(Task.DATA_TASK, task);
@@ -269,11 +269,11 @@ public class ParkingActivity extends AppCompatActivity implements View.OnClickLi
             }
             case R.id.text_view_date: {
                 DatePickerDialog datePickerDialog = DatePickerDialog.newInstance((mView, year, monthOfYear, dayOfMonth) -> {
-                    now.set(Calendar.YEAR, year);
-                    now.set(Calendar.MONTH, monthOfYear);
-                    now.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                    textViewDate.setText(dateFormat.format(now.getTime()));
-                }, now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
+                    calendar.set(Calendar.YEAR, year);
+                    calendar.set(Calendar.MONTH, monthOfYear);
+                    calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                    textViewDate.setText(dateFormat.format(calendar.getTime()));
+                }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
                 datePickerDialog.show(getSupportFragmentManager(), "DatePickerDialog");
                 break;
             }
@@ -286,7 +286,7 @@ public class ParkingActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onItemClickListener(int position, Task task) {
         Log.e("Tag", "--- navigate to edit task: " + task.getId());
-        Intent intent = new Intent(ParkingActivity.this, TaskActivity.class);
+        Intent intent = new Intent(DetailParkingActivity.this, TaskActivity.class);
         intent.putExtra(TaskActivity.DATA_POSITION, position);
         intent.putExtra(Task.DATA_TASK, task);
         mStartForResultTask.launch(intent);

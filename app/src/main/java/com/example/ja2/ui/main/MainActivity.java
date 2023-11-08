@@ -1,11 +1,10 @@
 package com.example.ja2.ui.main;
 
-import static com.example.ja2.ui.detail.ParkingActivity.ADD_PARKING;
-import static com.example.ja2.ui.detail.ParkingActivity.DATA_POSITION;
-import static com.example.ja2.ui.detail.ParkingActivity.REMOVE_PARKING;
-import static com.example.ja2.ui.detail.ParkingActivity.UPDATE_PARKING;
+import static com.example.ja2.ui.detail.DetailParkingActivity.ADD_PARKING;
+import static com.example.ja2.ui.detail.DetailParkingActivity.DATA_POSITION;
+import static com.example.ja2.ui.detail.DetailParkingActivity.REMOVE_PARKING;
+import static com.example.ja2.ui.detail.DetailParkingActivity.UPDATE_PARKING;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -26,13 +25,12 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ja2.R;
 import com.example.ja2.db.DatabaseHelper;
 import com.example.ja2.db.entity.Parking;
-import com.example.ja2.ui.detail.ParkingActivity;
+import com.example.ja2.ui.detail.DetailParkingActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -52,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             String action = intent.getAction();
             if (action.equals(ADD_PARKING)) {
                 Parking parking = intent.getParcelableExtra(Parking.DATA_PARKING);
-                adapter.addTheFirsItem(parking);
+                adapter.addParking(adapter.getItemCount(), parking);
                 Toast.makeText(MainActivity.this, R.string.toast_message_create_parking_successful, Toast.LENGTH_LONG).show();
             } else if (action.equals(REMOVE_PARKING)) {
                 int position = intent.getIntExtra(DATA_POSITION, -1);
@@ -107,13 +105,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         db = new DatabaseHelper(this);
         parkingArrayList.addAll(db.getListParking());
         adapter = new ParkingAdapter(parkingArrayList, MainActivity.this);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
-        recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(view -> {
-            Intent intent = new Intent(MainActivity.this, ParkingActivity.class);
+            Intent intent = new Intent(MainActivity.this, DetailParkingActivity.class);
             mStartForResult.launch(intent);
         });
     }
@@ -136,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onItemClickListener(int position, Parking parking) {
-        Intent intent = new Intent(MainActivity.this, ParkingActivity.class);
+        Intent intent = new Intent(MainActivity.this, DetailParkingActivity.class);
         if (parking != null) {
             intent.putExtra(DATA_POSITION, position);
             intent.putExtra(Parking.DATA_PARKING, parking);

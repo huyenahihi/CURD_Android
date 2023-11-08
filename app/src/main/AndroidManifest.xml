@@ -21,7 +21,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.detail.ParkingActivity" />
+        <activity android:name=".ui.detail.DetailParkingActivity" />
 
         <activity android:name=".ui.task.TaskActivity" />
     </application>

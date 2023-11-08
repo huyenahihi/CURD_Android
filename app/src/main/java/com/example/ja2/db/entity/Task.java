@@ -62,7 +62,6 @@ public class Task implements Parcelable {
         id = in.readInt();
     }
 
-
     public long getDateTime() {
         return dateTime;
     }
