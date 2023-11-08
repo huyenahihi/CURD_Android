@@ -5,24 +5,24 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
-public class Task implements Parcelable {
+public class Observation implements Parcelable { //cho phép truyền dữ liệu đi
 
-    public static final String DATA_TASK = "DATA_TASK";
-    public static final String TABLE_NAME = "tbl_task";
+    public static final String DATA_OBSERVATION = "DATA_OBSERVATION";
+    public static final String TABLE_NAME = "tbl_observation";
     public static final String COLUMN_ID = "id";
-    public static final String COLUMN_PARKING_ID = "parking_id";
+    public static final String COLUMN_HIKE_ID = "hike_id";
     public static final String COLUMN_NOTE = "note";
     public static final String COLUMN_DATE_TIME = "date_time";
 
-    public static final Creator<Task> CREATOR = new Creator<Task>() {
+    public static final Creator<Observation> CREATOR = new Creator<Observation>() {
         @Override
-        public Task createFromParcel(Parcel in) {
-            return new Task(in);
+        public Observation createFromParcel(Parcel in) {
+            return new Observation(in);
         }
 
         @Override
-        public Task[] newArray(int size) {
-            return new Task[size];
+        public Observation[] newArray(int size) {
+            return new Observation[size];
         }
     };
 
@@ -31,32 +31,32 @@ public class Task implements Parcelable {
                     + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                     + COLUMN_NOTE + " TEXT,"
                     + COLUMN_DATE_TIME + " DATETIME DEFAULT CURRENT_TIMESTAMP,"
-                    + COLUMN_PARKING_ID + " INTEGER, "
-                    + "FOREIGN KEY(" + COLUMN_PARKING_ID + ") REFERENCES " + Parking.TABLE_NAME + "("+Parking.COLUMN_ID+")"
-                    + ")";
+                    + COLUMN_HIKE_ID + " INTEGER, "
+                    + "FOREIGN KEY(" + COLUMN_HIKE_ID + ") REFERENCES " + Hike.TABLE_NAME + "("+ Hike.COLUMN_ID+")"
+                    + ")"; //tạo bảng
     private long dateTime;
     private String note;
     private int uid;
     private int id;
 
-    public Task() {
+    public Observation() {
 
     }
 
-    public Task(long dateTime, String note, int uid) {
+    public Observation(long dateTime, String note, int uid) {
         this.dateTime = dateTime;
         this.note = note;
         this.uid = uid;
     }
 
-    public Task(long dateTime, String note, int uid, int id) {
+    public Observation(long dateTime, String note, int uid, int id) {
         this.dateTime = dateTime;
         this.note = note;
         this.uid = uid;
         this.id = id;
     }
 
-    protected Task(Parcel in) {
+    protected Observation(Parcel in) {
         dateTime = in.readLong();
         note = in.readString();
         uid = in.readInt();

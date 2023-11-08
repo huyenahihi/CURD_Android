@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ja2.R;
-import com.example.ja2.db.entity.Parking;
+import com.example.ja2.db.entity.Hike;
 
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -24,12 +24,12 @@ public class ParkingAdapter extends RecyclerView.Adapter<ParkingAdapter.MyViewHo
     private static final String DATE_FORMAT = "dd/MM/yyyy";
     private static final DecimalFormat decimalFormat = new DecimalFormat("###.###");
     // 1- Variable
-    private final ArrayList<Parking> data;
+    private final ArrayList<Hike> data;
     private final OnItemClickListener callBack;
     DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
 
     //bo sung
-    public ParkingAdapter(ArrayList<Parking> data, OnItemClickListener callBack) {
+    public ParkingAdapter(ArrayList<Hike> data, OnItemClickListener callBack) {
         this.data = data;
         this.callBack = callBack;
     }
@@ -39,7 +39,7 @@ public class ParkingAdapter extends RecyclerView.Adapter<ParkingAdapter.MyViewHo
     @Override
     public ParkingAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // Nạp layout cho View biểu diễn phần tử cu the
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_parking, parent, false);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_hike, parent, false);
         return new MyViewHolder(itemView);
     }
 
@@ -47,14 +47,14 @@ public class ParkingAdapter extends RecyclerView.Adapter<ParkingAdapter.MyViewHo
     @Override
     @SuppressLint({"RecyclerView", "StringFormatInvalid"})
     public void onBindViewHolder(@NonNull ParkingAdapter.MyViewHolder holder, int positions) {
-        final Parking parking = data.get(holder.getAdapterPosition());
-        Date date = new Date(parking.getDate());
+        final Hike hike = data.get(holder.getAdapterPosition());
+        Date date = new Date(hike.getDate());
         holder.textViewDate.setText(dateFormat.format(date));
-        holder.textViewDistance.setText(holder.itemView.getContext().getString(R.string.general_distance, decimalFormat.format(parking.getLength())));
-        holder.textViewName.setText(parking.getName());
-        holder.textViewNote.setText(parking.getDescription());
-        // Xử lý khi nút Chi tiết được bấm
-        holder.itemView.setOnClickListener(view -> callBack.onItemClickListener(holder.getAdapterPosition(), parking));
+        holder.textViewDistance.setText(holder.itemView.getContext().getString(R.string.general_distance, decimalFormat.format(hike.getLength())));
+        holder.textViewName.setText(hike.getName());
+        holder.textViewNote.setText(hike.getDescription());
+        // Xử lý khi nút Add được bấm
+        holder.itemView.setOnClickListener(view -> callBack.onItemClickListener(holder.getAdapterPosition(), hike));
     }
 
     // cho biết số phần tử của dữ liệu
@@ -70,28 +70,28 @@ public class ParkingAdapter extends RecyclerView.Adapter<ParkingAdapter.MyViewHo
         }
     }
 
-    public void updatePosition(int position, Parking parking) {
+    public void updatePosition(int position, Hike hike) {
         if (position >= 0 && position <= getItemCount()) {
-            data.set(position, parking);
+            data.set(position, hike);
             notifyItemChanged(position);
         } else {
             Log.e("Tag", "--- Update position fail: " + position);
         }
     }
 
-    public void addParking(int position, Parking parking) {
-        data.add(position, parking);
+    public void addParking(int position, Hike hike) {
+        data.add(position, hike);
         notifyItemInserted(position);
     }
 
     public void submitData(ArrayList mData) {
         this.data.clear();
         data.addAll(mData);
-        notifyDataSetChanged();
+        notifyDataSetChanged(); //khi dữ liệu thay đổi, update toàn bộ list
     }
 
     public interface OnItemClickListener {
-        void onItemClickListener(int position, Parking parking);
+        void onItemClickListener(int position, Hike hike);
     }
 
     // 2- ViewHolder

@@ -5,10 +5,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
-import com.example.ja2.db.entity.Parking;
-import com.example.ja2.db.entity.Task;
+import com.example.ja2.db.entity.Hike;
+import com.example.ja2.db.entity.Observation;
 
 import java.util.ArrayList;
 
@@ -22,54 +21,56 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     @Override
+    //create table
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL(Parking.CREATE_TABLE);
-        sqLiteDatabase.execSQL(Task.CREATE_TABLE);
+        sqLiteDatabase.execSQL(Hike.CREATE_TABLE);
+        sqLiteDatabase.execSQL(Observation.CREATE_TABLE);
     }
 
     @Override
+    //Check nếu có bảng rồi thì xóa bảng
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Parking.TABLE_NAME);
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Task.TABLE_NAME);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Hike.TABLE_NAME);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Observation.TABLE_NAME);
         onCreate(sqLiteDatabase);
     }
 
-    public Parking getParking(long id) {
+    public Hike getHike(long id) { //getParking
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(Parking.TABLE_NAME, new String[]{Parking.COLUMN_ID, Parking.COLUMN_NAME,  Parking.COLUMN_DESCRIPTION, Parking.COLUMN_LOCATION, Parking.COLUMN_LENGTH, Parking.COLUMN_AVAILABLE, Parking.COLUMN_LEVEL, Parking.COLUMN_DATE}, Parking.COLUMN_ID + "=?", new String[]{String.valueOf(id)}, null, null, null, null);
+        Cursor cursor = db.query(Hike.TABLE_NAME, new String[]{Hike.COLUMN_ID, Hike.COLUMN_NAME,  Hike.COLUMN_DESCRIPTION, Hike.COLUMN_LOCATION, Hike.COLUMN_LENGTH, Hike.COLUMN_AVAILABLE, Hike.COLUMN_LEVEL, Hike.COLUMN_DATE}, Hike.COLUMN_ID + "=?", new String[]{String.valueOf(id)}, null, null, null, null);
         if (cursor != null) cursor.moveToFirst();
-        Parking parking = new Parking();
-        parking.setId(cursor.getInt(cursor.getColumnIndexOrThrow(Parking.COLUMN_ID)));
-        parking.setName(cursor.getString(cursor.getColumnIndexOrThrow(Parking.COLUMN_NAME)));
-        parking.setDescription(cursor.getString(cursor.getColumnIndexOrThrow(Parking.COLUMN_DESCRIPTION)));
-        parking.setLocation(cursor.getString(cursor.getColumnIndexOrThrow(Parking.COLUMN_LOCATION)));
-        parking.setLength(cursor.getDouble(cursor.getColumnIndexOrThrow(Parking.COLUMN_LENGTH)));
-        int status = cursor.getInt(cursor.getColumnIndexOrThrow(Parking.COLUMN_AVAILABLE));
-        parking.setAvailable(status != 0);
-        parking.setLevel(cursor.getInt(cursor.getColumnIndexOrThrow(Parking.COLUMN_LEVEL)));
-        parking.setDate(cursor.getLong(cursor.getColumnIndexOrThrow(Parking.COLUMN_DATE)));
+        Hike hike = new Hike();
+        hike.setId(cursor.getInt(cursor.getColumnIndexOrThrow(Hike.COLUMN_ID)));
+        hike.setName(cursor.getString(cursor.getColumnIndexOrThrow(Hike.COLUMN_NAME)));
+        hike.setDescription(cursor.getString(cursor.getColumnIndexOrThrow(Hike.COLUMN_DESCRIPTION)));
+        hike.setLocation(cursor.getString(cursor.getColumnIndexOrThrow(Hike.COLUMN_LOCATION)));
+        hike.setLength(cursor.getDouble(cursor.getColumnIndexOrThrow(Hike.COLUMN_LENGTH)));
+        int status = cursor.getInt(cursor.getColumnIndexOrThrow(Hike.COLUMN_AVAILABLE));
+        hike.setAvailable(status != 0);
+        hike.setLevel(cursor.getInt(cursor.getColumnIndexOrThrow(Hike.COLUMN_LEVEL)));
+        hike.setDate(cursor.getLong(cursor.getColumnIndexOrThrow(Hike.COLUMN_DATE)));
         cursor.close();
-        return parking;
+        return hike;
     }
 
-    public ArrayList<Parking> getListParking() {
-        ArrayList<Parking> mData = new ArrayList<>();
-        String selectQuery = "SELECT * FROM " + Parking.TABLE_NAME + " ORDER BY " + Parking.COLUMN_ID + " DESC";
+    public ArrayList<Hike> getListHike() {
+        ArrayList<Hike> mData = new ArrayList<>();
+        String selectQuery = "SELECT * FROM " + Hike.TABLE_NAME + " ORDER BY " + Hike.COLUMN_ID + " DESC";
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {
             do {
-                Parking parking = new Parking();
-                parking.setId(cursor.getInt(cursor.getColumnIndexOrThrow(Parking.COLUMN_ID)));
-                parking.setName(cursor.getString(cursor.getColumnIndexOrThrow(Parking.COLUMN_NAME)));
-                parking.setDescription(cursor.getString(cursor.getColumnIndexOrThrow(Parking.COLUMN_DESCRIPTION)));
-                parking.setLocation(cursor.getString(cursor.getColumnIndexOrThrow(Parking.COLUMN_LOCATION)));
-                parking.setLength(cursor.getDouble(cursor.getColumnIndexOrThrow(Parking.COLUMN_LENGTH)));
-                int status = cursor.getInt(cursor.getColumnIndexOrThrow(Parking.COLUMN_AVAILABLE));
-                parking.setAvailable(status != 0);
-                parking.setLevel(cursor.getInt(cursor.getColumnIndexOrThrow(Parking.COLUMN_LEVEL)));
-                parking.setDate(cursor.getLong(cursor.getColumnIndexOrThrow(Parking.COLUMN_DATE)));
-                mData.add(parking);
+                Hike hike = new Hike();
+                hike.setId(cursor.getInt(cursor.getColumnIndexOrThrow(Hike.COLUMN_ID)));
+                hike.setName(cursor.getString(cursor.getColumnIndexOrThrow(Hike.COLUMN_NAME)));
+                hike.setDescription(cursor.getString(cursor.getColumnIndexOrThrow(Hike.COLUMN_DESCRIPTION)));
+                hike.setLocation(cursor.getString(cursor.getColumnIndexOrThrow(Hike.COLUMN_LOCATION)));
+                hike.setLength(cursor.getDouble(cursor.getColumnIndexOrThrow(Hike.COLUMN_LENGTH)));
+                int status = cursor.getInt(cursor.getColumnIndexOrThrow(Hike.COLUMN_AVAILABLE));
+                hike.setAvailable(status != 0);
+                hike.setLevel(cursor.getInt(cursor.getColumnIndexOrThrow(Hike.COLUMN_LEVEL)));
+                hike.setDate(cursor.getLong(cursor.getColumnIndexOrThrow(Hike.COLUMN_DATE)));
+                mData.add(hike);
             } while (cursor.moveToNext());
         }
         db.close();
@@ -77,97 +78,97 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     // Insert Data into Database
-    public long insertParking(Parking parking) {
+    public long insertHike(Hike hike) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(Parking.COLUMN_NAME, parking.getName());
-        values.put(Parking.COLUMN_DESCRIPTION, parking.getDescription());
-        values.put(Parking.COLUMN_LOCATION, parking.getLocation());
-        values.put(Parking.COLUMN_LENGTH, parking.getLength());
-        values.put(Parking.COLUMN_AVAILABLE, parking.getAvailable());
-        values.put(Parking.COLUMN_LEVEL, parking.getLevel());
-        values.put(Parking.COLUMN_DATE, parking.getDate());
-        long id = db.insert(Parking.TABLE_NAME, null, values);
+        values.put(Hike.COLUMN_NAME, hike.getName());
+        values.put(Hike.COLUMN_DESCRIPTION, hike.getDescription());
+        values.put(Hike.COLUMN_LOCATION, hike.getLocation());
+        values.put(Hike.COLUMN_LENGTH, hike.getLength());
+        values.put(Hike.COLUMN_AVAILABLE, hike.getAvailable());
+        values.put(Hike.COLUMN_LEVEL, hike.getLevel());
+        values.put(Hike.COLUMN_DATE, hike.getDate());
+        long id = db.insert(Hike.TABLE_NAME, null, values);
         db.close();
         return id;
     }
 
-    public int updateParking(Parking parking) {
+    public int updateHike(Hike hike) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(Parking.COLUMN_NAME, parking.getName());
-        values.put(Parking.COLUMN_DESCRIPTION, parking.getDescription());
-        values.put(Parking.COLUMN_LOCATION, parking.getLocation());
-        values.put(Parking.COLUMN_LENGTH, parking.getLength());
-        values.put(Parking.COLUMN_AVAILABLE, parking.getAvailable());
-        values.put(Parking.COLUMN_LEVEL, parking.getLevel());
-        values.put(Parking.COLUMN_DATE, parking.getDate());
-        int rowsUpdated = db.update(Parking.TABLE_NAME, values, Parking.COLUMN_ID + " = ? ", new String[]{String.valueOf(parking.getId())});
+        values.put(Hike.COLUMN_NAME, hike.getName());
+        values.put(Hike.COLUMN_DESCRIPTION, hike.getDescription());
+        values.put(Hike.COLUMN_LOCATION, hike.getLocation());
+        values.put(Hike.COLUMN_LENGTH, hike.getLength());
+        values.put(Hike.COLUMN_AVAILABLE, hike.getAvailable());
+        values.put(Hike.COLUMN_LEVEL, hike.getLevel());
+        values.put(Hike.COLUMN_DATE, hike.getDate());
+        int rowsUpdated = db.update(Hike.TABLE_NAME, values, Hike.COLUMN_ID + " = ? ", new String[]{String.valueOf(hike.getId())});
         db.close();
         return rowsUpdated;
     }
 
-    public void deleteParking(Parking parking) {
+    public void deleteHike(Hike hike) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(Parking.TABLE_NAME, Parking.COLUMN_ID + " = ?", new String[]{String.valueOf(parking.getId())});
+        db.delete(Hike.TABLE_NAME, Hike.COLUMN_ID + " = ?", new String[]{String.valueOf(hike.getId())});
         db.close();
     }
 
-    public ArrayList<Parking> searchParking(String keyword) {
-        ArrayList<Parking> parkings = new ArrayList<>();
-        String selectQuery = "SELECT * FROM " + Parking.TABLE_NAME + " WHERE " + Parking.COLUMN_NAME + " LIKE '%" + keyword + "%' OR " + Parking.COLUMN_LOCATION + " LIKE '%" + keyword + "%' " + "OR " + Parking.COLUMN_LENGTH + " LIKE '%" + keyword + "%' " + " ORDER BY " + Parking.COLUMN_ID + " DESC";
+    public ArrayList<Hike> searchHike(String keyword) {
+        ArrayList<Hike> hikes = new ArrayList<>();
+        String selectQuery = "SELECT * FROM " + Hike.TABLE_NAME + " WHERE " + Hike.COLUMN_NAME + " LIKE '%" + keyword + "%' OR " + Hike.COLUMN_LOCATION + " LIKE '%" + keyword + "%' " + "OR " + Hike.COLUMN_LENGTH + " LIKE '%" + keyword + "%' " + " ORDER BY " + Hike.COLUMN_ID + " DESC";
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {
             do {
-                Parking parking = new Parking();
-                parking.setId(cursor.getInt(cursor.getColumnIndexOrThrow(Parking.COLUMN_ID)));
-                parking.setName(cursor.getString(cursor.getColumnIndexOrThrow(Parking.COLUMN_NAME)));
-                parkings.add(parking);
+                Hike hike = new Hike();
+                hike.setId(cursor.getInt(cursor.getColumnIndexOrThrow(Hike.COLUMN_ID)));
+                hike.setName(cursor.getString(cursor.getColumnIndexOrThrow(Hike.COLUMN_NAME)));
+                hikes.add(hike);
             } while (cursor.moveToNext());
         }
         db.close();
-        return parkings;
+        return hikes;
     }
 
-    public ArrayList<Task> getListTask(long uid) {
-        ArrayList<Task> mData = new ArrayList<>();
-        String selectQuery = "SELECT * FROM " + Task.TABLE_NAME + " WHERE " + Task.COLUMN_PARKING_ID + " = " + uid + " ORDER BY " + Task.COLUMN_ID + " DESC";
+    public ArrayList<Observation> getListObservation(long uid) {
+        ArrayList<Observation> mData = new ArrayList<>();
+        String selectQuery = "SELECT * FROM " + Observation.TABLE_NAME + " WHERE " + Observation.COLUMN_HIKE_ID + " = " + uid + " ORDER BY " + Observation.COLUMN_ID + " DESC";
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {
             do {
-                Task task = new Task();
-                task.setId(cursor.getInt(cursor.getColumnIndexOrThrow(Task.COLUMN_ID)));
-                task.setNote(cursor.getString(cursor.getColumnIndexOrThrow(Task.COLUMN_NOTE)));
-                task.setDateTime(cursor.getLong(cursor.getColumnIndexOrThrow(Task.COLUMN_DATE_TIME)));
-                task.setUID(cursor.getInt(cursor.getColumnIndexOrThrow(Task.COLUMN_PARKING_ID)));
-                mData.add(task);
+                Observation observation = new Observation();
+                observation.setId(cursor.getInt(cursor.getColumnIndexOrThrow(Observation.COLUMN_ID)));
+                observation.setNote(cursor.getString(cursor.getColumnIndexOrThrow(Observation.COLUMN_NOTE)));
+                observation.setDateTime(cursor.getLong(cursor.getColumnIndexOrThrow(Observation.COLUMN_DATE_TIME)));
+                observation.setUID(cursor.getInt(cursor.getColumnIndexOrThrow(Observation.COLUMN_HIKE_ID)));
+                mData.add(observation);
             } while (cursor.moveToNext());
         }
         db.close();
         return mData;
     }
 
-    public long insertTask(Task task) {
+    public long insertObservation(Observation observation) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(Task.COLUMN_NOTE, task.getNote());
-        values.put(Task.COLUMN_DATE_TIME, task.getDateTime());
-        values.put(Task.COLUMN_PARKING_ID, task.getUID());
-        long id = db.insert(Task.TABLE_NAME, null, values);
+        values.put(Observation.COLUMN_NOTE, observation.getNote());
+        values.put(Observation.COLUMN_DATE_TIME, observation.getDateTime());
+        values.put(Observation.COLUMN_HIKE_ID, observation.getUID());
+        long id = db.insert(Observation.TABLE_NAME, null, values);
         db.close();
         return id;
     }
 
-    public int updateTask(Task task) {
+    public int updateObservation(Observation observation) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(Task.COLUMN_ID, task.getId());
-        values.put(Task.COLUMN_NOTE, task.getNote());
-        values.put(Task.COLUMN_DATE_TIME, task.getDateTime());
-        values.put(Task.COLUMN_PARKING_ID, task.getUID());
-        int rowsUpdated = db.update(Task.TABLE_NAME, values, Task.COLUMN_ID + " = ? ", new String[]{String.valueOf(task.getId())});
+        values.put(Observation.COLUMN_ID, observation.getId());
+        values.put(Observation.COLUMN_NOTE, observation.getNote());
+        values.put(Observation.COLUMN_DATE_TIME, observation.getDateTime());
+        values.put(Observation.COLUMN_HIKE_ID, observation.getUID());
+        int rowsUpdated = db.update(Observation.TABLE_NAME, values, Observation.COLUMN_ID + " = ? ", new String[]{String.valueOf(observation.getId())});
         db.close();
         return rowsUpdated;
     }

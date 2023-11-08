@@ -248,7 +248,7 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintTop_toBottomOf="@+id/relative_layout_title_observation"
             tools:itemCount="10"
-            tools:listitem="@layout/item_task" />
+            tools:listitem="@layout/item_observation" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

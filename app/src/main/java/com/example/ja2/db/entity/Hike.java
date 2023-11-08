@@ -3,13 +3,11 @@ package com.example.ja2.db.entity;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import androidx.annotation.NonNull;
-
-public class Parking implements Parcelable {
+public class Hike implements Parcelable {
 
     // 1- Constants for Database
-    public static final String DATA_PARKING = "DATA_PARKING";
-    public static final String TABLE_NAME = "tbl_parking";
+    public static final String DATA_HIKE = "DATA_HIKE";
+    public static final String TABLE_NAME = "tbl_hike";
     public static final String COLUMN_ID = "id";
     public static final String COLUMN_NAME = "name";
     public static final String COLUMN_DESCRIPTION = "description";
@@ -38,11 +36,11 @@ public class Parking implements Parcelable {
     private long date = System.currentTimeMillis();
 
     // 3- Constructors
-    public Parking() {
+    public Hike() {
 
     }
 
-    public Parking(String name, String description, String location, boolean available, Double length, int level, long date) {
+    public Hike(String name, String description, String location, boolean available, Double length, int level, long date) {
         this.name = name;
         this.description = description;
         this.location = location;
@@ -52,7 +50,7 @@ public class Parking implements Parcelable {
         this.date = date;
     }
 
-    protected Parking(Parcel in) {
+    protected Hike(Parcel in) {
         id = in.readInt();
         name = in.readString();
         description = in.readString();
@@ -80,15 +78,15 @@ public class Parking implements Parcelable {
         return 0;
     }
 
-    public static final Creator<Parking> CREATOR = new Creator<Parking>() {
+    public static final Creator<Hike> CREATOR = new Creator<Hike>() {
         @Override
-        public Parking createFromParcel(Parcel in) {
-            return new Parking(in);
+        public Hike createFromParcel(Parcel in) {
+            return new Hike(in);
         }
 
         @Override
-        public Parking[] newArray(int size) {
-            return new Parking[size];
+        public Hike[] newArray(int size) {
+            return new Hike[size];
         }
     };
 
@@ -158,7 +156,7 @@ public class Parking implements Parcelable {
     }
 
     public String toString(){
-        return "Parking{ 'id' = " + id  +",  name = '" + name + '\'' + ",description = '" + description + '\'' + ",location = '" + location + '\'' + ", available: " + available +"}";
+        return "Hike{ 'id' = " + id  +",  name = '" + name + '\'' + ",description = '" + description + '\'' + ",location = '" + location + '\'' + ", available: " + available +"}";
     }
 
 }

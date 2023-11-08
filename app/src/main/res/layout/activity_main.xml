@@ -30,7 +30,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:padding="@dimen/_16sdp"
-                    android:text="@string/title_list_parking_screen"
+                    android:text="@string/title_list_hike_screen"
                     android:textColor="@color/white"
                     android:textStyle="bold"
                     app:layout_constraintTop_toTopOf="parent" />

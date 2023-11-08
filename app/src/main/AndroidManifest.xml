@@ -21,9 +21,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.detail.DetailParkingActivity" />
+        <activity android:name=".ui.detail.DetailHikeActivity" />
 
-        <activity android:name=".ui.task.TaskActivity" />
+        <activity android:name=".ui.observation.ObservationActivity" />
     </application>
 
 </manifest>

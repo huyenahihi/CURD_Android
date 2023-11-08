@@ -1,9 +1,9 @@
 package com.example.ja2.ui.detail;
 
-import static com.example.ja2.db.entity.Parking.DATA_PARKING;
-import static com.example.ja2.ui.task.TaskActivity.ADD_TASK;
-import static com.example.ja2.ui.task.TaskActivity.REMOVE_TASK;
-import static com.example.ja2.ui.task.TaskActivity.UPDATE_TASK;
+import static com.example.ja2.db.entity.Hike.DATA_HIKE;
+import static com.example.ja2.ui.task.ObservationActivity.ADD_TASK;
+import static com.example.ja2.ui.task.ObservationActivity.REMOVE_TASK;
+import static com.example.ja2.ui.task.ObservationActivity.UPDATE_TASK;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -12,7 +12,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.util.Patterns;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -30,10 +29,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ja2.R;
 import com.example.ja2.db.DatabaseHelper;
-import com.example.ja2.db.entity.Parking;
-import com.example.ja2.db.entity.Task;
-import com.example.ja2.ui.task.TaskActivity;
-import com.example.ja2.ui.task.TaskAdapter;
+import com.example.ja2.db.entity.Hike;
+import com.example.ja2.db.entity.Observation;
+import com.example.ja2.ui.task.ObservationActivity;
+import com.example.ja2.ui.task.ObservationAdapter;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.text.DateFormat;
@@ -45,16 +44,16 @@ import java.util.Date;
 /**
  * @noinspection deprecation
  */
-public class DetailParkingActivity extends AppCompatActivity implements View.OnClickListener, TaskAdapter.OnItemClickListener {
+public class DetailHikeActivity extends AppCompatActivity implements View.OnClickListener, ObservationAdapter.OnItemClickListener {
 
     public static final String DATA_POSITION = "DATA_POSITION";
-    public static final String REMOVE_PARKING = "REMOVE_PARKING";
-    public static final String ADD_PARKING = "ADD_PARKING";
-    public static final String UPDATE_PARKING = "UPDATE_PARKING";
+    public static final String REMOVE_HIKE = "REMOVE_PARKING";
+    public static final String ADD_HIKE = "ADD_PARKING";
+    public static final String UPDATE_HIKE = "UPDATE_PARKING";
     public static final String DATE_FORMAT = "dd/MM/yyyy";
     Calendar calendar = Calendar.getInstance();
     DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
-    private Parking parking = new Parking();
+    private Hike hike = new Hike();
     private int position = -1;
     private TextView textViewTitleScreen = null;
     private ImageView imageViewRemove = null;
@@ -68,22 +67,22 @@ public class DetailParkingActivity extends AppCompatActivity implements View.OnC
     private TextView textViewDate = null;
     private LinearLayout linearLayoutGroupTask = null;
     private RecyclerView recyclerViewTask = null;
-    private TaskAdapter adapter = null;
+    private ObservationAdapter adapter = null;
     ActivityResultLauncher<Intent> mStartForResultTask = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         if (result.getResultCode() == Activity.RESULT_OK) {
             Intent intent = result.getData();
             String action = intent.getAction();
             if (action.equals(ADD_TASK)) {
-                Task task = intent.getParcelableExtra(Task.DATA_TASK);
-                adapter.addTheFirsItem(task);
+                Observation observation = intent.getParcelableExtra(Observation.DATA_OBSERVATION);
+                adapter.addTheFirsItem(observation);
                 recyclerViewTask.getLayoutManager().scrollToPosition(0);
             } else if (action.equals(REMOVE_TASK)) {
-                int position = intent.getIntExtra(TaskActivity.DATA_POSITION, -1);
+                int position = intent.getIntExtra(ObservationActivity.DATA_POSITION, -1);
                 adapter.removeItem(position);
             } else if (action.equals(UPDATE_TASK)) {
-                int position = intent.getIntExtra(TaskActivity.DATA_POSITION, -1);
-                Task task = intent.getParcelableExtra(Task.DATA_TASK);
-                adapter.updatePosition(position, task);
+                int position = intent.getIntExtra(ObservationActivity.DATA_POSITION, -1);
+                Observation observation = intent.getParcelableExtra(Observation.DATA_OBSERVATION);
+                adapter.updatePosition(position, observation);
                 recyclerViewTask.getLayoutManager().scrollToPosition(position);
             }
         }
@@ -95,10 +94,10 @@ public class DetailParkingActivity extends AppCompatActivity implements View.OnC
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_parking);
+        setContentView(R.layout.activity_hike);
         db = new DatabaseHelper(this);
-        parking = getIntent().getParcelableExtra(DATA_PARKING);
-        position = getIntent().getIntExtra(DetailParkingActivity.DATA_POSITION, -1);
+        hike = getIntent().getParcelableExtra(DATA_HIKE);
+        position = getIntent().getIntExtra(DetailHikeActivity.DATA_POSITION, -1);
         textViewTitleScreen = findViewById(R.id.text_view_title_screen);
         imageViewRemove = findViewById(R.id.image_view_remove);
         imageViewAdd = findViewById(R.id.image_view_add);
@@ -120,29 +119,29 @@ public class DetailParkingActivity extends AppCompatActivity implements View.OnC
         mData.add(4);
         adapterLevel = new LevelAdapter(mData);
         spinner.setAdapter(adapterLevel);
-        if (parking != null) {
-            textViewTitleScreen.setText(R.string.title_edit_parking_screen);
-            editTextUserName.setText(parking.getName());
-            editTextDescription.setText(parking.getDescription());
-            editTextLocation.setText(parking.getLocation());
-            editTextLength.setText(String.valueOf(parking.getLength()));
-            checkBoxAvailable.setChecked(parking.getAvailable());
-            spinner.setSelection(parking.getLevel() - 1);
-            Date date = new Date(parking.getDate());
+        if (hike != null) {
+            textViewTitleScreen.setText(R.string.title_edit_hike_screen);
+            editTextUserName.setText(hike.getName());
+            editTextDescription.setText(hike.getDescription());
+            editTextLocation.setText(hike.getLocation());
+            editTextLength.setText(String.valueOf(hike.getLength()));
+            checkBoxAvailable.setChecked(hike.getAvailable());
+            spinner.setSelection(hike.getLevel() - 1);
+            Date date = new Date(hike.getDate());
             calendar.setTime(date);
             textViewDate.setText(dateFormat.format(date));
             imageViewRemove.setVisibility(View.VISIBLE);
             imageViewAdd.setVisibility(View.GONE);
             linearLayoutGroupTask.setVisibility(View.VISIBLE);
-            ArrayList mDataTask = db.getListTask(parking.getId());
-            adapter = new TaskAdapter(mDataTask, this);
+            ArrayList mDataTask = db.getListObservation(hike.getId());
+            adapter = new ObservationAdapter(mDataTask, this);
             recyclerViewTask.setAdapter(adapter);
         } else {
             Log.e("Tag", "--- create new parking");
-            textViewTitleScreen.setText(R.string.title_add_parking_screen);
+            textViewTitleScreen.setText(R.string.title_add_hike_screen);
             imageViewRemove.setVisibility(View.GONE);
             imageViewAdd.setVisibility(View.VISIBLE);
-            linearLayoutGroupTask.setVisibility(View.GONE);
+            linearLayoutGroupTask.setVisibility(View.GONE); //ẩn toàn bộ
         }
     }
 
@@ -159,26 +158,26 @@ public class DetailParkingActivity extends AppCompatActivity implements View.OnC
             String location = editTextLocation.getText().toString().trim();
             String height = editTextLength.getText().toString().trim();
             if (TextUtils.isEmpty(name) || TextUtils.isEmpty(location) || TextUtils.isEmpty(height)) {
-                Toast.makeText(DetailParkingActivity.this, R.string.validate_form_input_parking, Toast.LENGTH_LONG).show();
+                Toast.makeText(DetailHikeActivity.this, R.string.validate_form_input_hike, Toast.LENGTH_LONG).show();
             } else {
-                parking.setName(name);
-                parking.setDescription(description);
-                parking.setLocation(location);
-                parking.setLength(Double.valueOf(height));
-                parking.setAvailable(checkBoxAvailable.isChecked());
-                parking.setLevel(spinner.getSelectedItemPosition() + 1);
-                parking.setDate(calendar.getTimeInMillis());
-                if (position != -1) {
-                    int id = db.updateParking(parking);
-                    intent.setAction(UPDATE_PARKING);
-                    intent.putExtra(DetailParkingActivity.DATA_POSITION, position);
-                    intent.putExtra(DATA_PARKING, parking);
+                hike.setName(name);
+                hike.setDescription(description);
+                hike.setLocation(location);
+                hike.setLength(Double.valueOf(height));
+                hike.setAvailable(checkBoxAvailable.isChecked());
+                hike.setLevel(spinner.getSelectedItemPosition() + 1);
+                hike.setDate(calendar.getTimeInMillis());
+                if (position != -1) { //nếu position khác -1-> thực hiện lệnh update
+                    int id = db.updateHike(hike);
+                    intent.setAction(UPDATE_HIKE);
+                    intent.putExtra(DetailHikeActivity.DATA_POSITION, position);
+                    intent.putExtra(DATA_HIKE, hike);
                 } else {
-                    db.insertParking(parking);
-                    intent.setAction(ADD_PARKING);
-                    intent.putExtra(DATA_PARKING, parking);
+                    db.insertHike(hike);
+                    intent.setAction(ADD_HIKE);
+                    intent.putExtra(DATA_HIKE, hike);
                 }
-                setResult(Activity.RESULT_OK, intent);
+                setResult(Activity.RESULT_OK, intent); //=> Báo về màn trước để check
                 finish();
                 super.onBackPressed();
             }
@@ -211,11 +210,11 @@ public class DetailParkingActivity extends AppCompatActivity implements View.OnC
             }
             case R.id.image_view_remove: {
                 Log.e("Tag", "--- remove task");
-                db.deleteParking(parking);
+                db.deleteHike(hike);
                 Intent intent = new Intent();
-                intent.setAction(REMOVE_PARKING);
-                intent.putExtra(DetailParkingActivity.DATA_POSITION, position);
-                intent.putExtra(DATA_PARKING, parking);
+                intent.setAction(REMOVE_HIKE);
+                intent.putExtra(DetailHikeActivity.DATA_POSITION, position);
+                intent.putExtra(DATA_HIKE, hike);
                 setResult(Activity.RESULT_OK, intent);
                 finish();
                 break;
@@ -226,23 +225,23 @@ public class DetailParkingActivity extends AppCompatActivity implements View.OnC
                 String location = editTextLocation.getText().toString().trim();
                 String height = editTextLength.getText().toString().trim();
                 if (TextUtils.isEmpty(name) || TextUtils.isEmpty(location) || TextUtils.isEmpty(height)) {
-                    Toast.makeText(DetailParkingActivity.this, R.string.validate_form_input_parking, Toast.LENGTH_LONG).show();
+                    Toast.makeText(DetailHikeActivity.this, R.string.validate_form_input_hike, Toast.LENGTH_LONG).show();
                 } else {
-                    parking = new Parking();
-                    parking.setName(name);
-                    parking.setDescription(description);
-                    parking.setLocation(location);
-                    parking.setLength(Double.valueOf(height));
-                    parking.setAvailable(checkBoxAvailable.isChecked());
-                    parking.setLevel(spinner.getSelectedItemPosition() + 1);
-                    parking.setDate(calendar.getTimeInMillis());
-                    long id = db.insertParking(parking);
-                    Parking parking = db.getParking(id);
-                    if (parking != null) {
-                        Log.e("Tag", "--- add parking: " + parking);
+                    this.hike = new Hike();
+                    this.hike.setName(name);
+                    this.hike.setDescription(description);
+                    this.hike.setLocation(location);
+                    this.hike.setLength(Double.valueOf(height));
+                    this.hike.setAvailable(checkBoxAvailable.isChecked());
+                    this.hike.setLevel(spinner.getSelectedItemPosition() + 1);
+                    this.hike.setDate(calendar.getTimeInMillis());
+                    long id = db.insertHike(this.hike);
+                    Hike hike = db.getHike(id);
+                    if (hike != null) {
+                        Log.e("Tag", "--- add parking: " + hike);
                         Intent intent = new Intent();
-                        intent.setAction(ADD_PARKING);
-                        intent.putExtra(DATA_PARKING, parking);
+                        intent.setAction(ADD_HIKE);
+                        intent.putExtra(DATA_HIKE, hike);
                         setResult(Activity.RESULT_OK, intent);
                         finish();
                     }
@@ -250,10 +249,10 @@ public class DetailParkingActivity extends AppCompatActivity implements View.OnC
                 break;
             }
             case R.id.image_view_edit: {
-                Intent intent = new Intent(DetailParkingActivity.this, TaskActivity.class);
-                Task task = new Task();
-                task.setUID(parking.getId());
-                intent.putExtra(Task.DATA_TASK, task);
+                Intent intent = new Intent(DetailHikeActivity.this, ObservationActivity.class);
+                Observation observation = new Observation();
+                observation.setUID(hike.getId());
+                intent.putExtra(Observation.DATA_OBSERVATION, observation);
                 mStartForResultTask.launch(intent);
                 break;
             }
@@ -274,11 +273,11 @@ public class DetailParkingActivity extends AppCompatActivity implements View.OnC
     }
 
     @Override
-    public void onItemClickListener(int position, Task task) {
-        Log.e("Tag", "--- navigate to edit task: " + task.getId());
-        Intent intent = new Intent(DetailParkingActivity.this, TaskActivity.class);
-        intent.putExtra(TaskActivity.DATA_POSITION, position);
-        intent.putExtra(Task.DATA_TASK, task);
+    public void onItemClickListener(int position, Observation observation) {
+        Log.e("Tag", "--- navigate to edit task: " + observation.getId());
+        Intent intent = new Intent(DetailHikeActivity.this, ObservationActivity.class);
+        intent.putExtra(ObservationActivity.DATA_POSITION, position);
+        intent.putExtra(Observation.DATA_OBSERVATION, observation);
         mStartForResultTask.launch(intent);
     }
 }
