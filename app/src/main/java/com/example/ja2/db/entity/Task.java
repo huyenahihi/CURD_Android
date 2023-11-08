@@ -31,7 +31,8 @@ public class Task implements Parcelable {
                     + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                     + COLUMN_NOTE + " TEXT,"
                     + COLUMN_DATE_TIME + " DATETIME DEFAULT CURRENT_TIMESTAMP,"
-                    + COLUMN_UID + " INTEGER"
+                    + COLUMN_UID + " INTEGER, "
+                    + "FOREIGN KEY(" + COLUMN_UID + ") REFERENCES "+Parking.TABLE_NAME+"("+Parking.COLUMN_ID+")"
                     + ")";
     private long dateTime;
     private String note;

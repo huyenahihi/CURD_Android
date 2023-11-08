@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ViewFlipper viewFlipper = null;
     private EditText editTextQuery = null;
     private ParkingAdapter adapter;
+    private RecyclerView recyclerView;
 
     ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         if (result.getResultCode() == Activity.RESULT_OK) {
@@ -50,7 +51,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             String action = intent.getAction();
             if (action.equals(ADD_PARKING)) {
                 Parking parking = intent.getParcelableExtra(Parking.DATA_PARKING);
-                adapter.addParking(adapter.getItemCount(), parking);
+                adapter.addParking(0, parking);
+                recyclerView.getLayoutManager().scrollToPosition(0);
                 Toast.makeText(MainActivity.this, R.string.toast_message_create_parking_successful, Toast.LENGTH_LONG).show();
             } else if (action.equals(REMOVE_PARKING)) {
                 int position = intent.getIntExtra(DATA_POSITION, -1);
@@ -64,7 +66,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
     });
-    private RecyclerView recyclerView;
     private DatabaseHelper db;
     private Handler mHandler = new Handler();
 
