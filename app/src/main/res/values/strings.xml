@@ -9,11 +9,11 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
-    <string name="validate_form_input_task">Please input form task</string>
+    <string name="validate_form_input_task">Please input form observation</string>
     <string name="title_list_parking_screen">List parking</string>
     <string name="title_add_parking_screen">Add parking</string>
     <string name="title_edit_parking_screen">Update parking</string>
-    <string name="hint_input_user_name">Name of(*)</string>
+    <string name="hint_input_user_name">Name of Hike(*)</string>
     <string name="hint_input_email">Contact(*)</string>
     <string name="hint_input_description">Description</string>
     <string name="hint_input_location">Location(*)</string>
@@ -30,13 +30,13 @@
     <string name="title_observation">Time of observation</string>
     <string name="title_date">Date(*):</string>
     <string name="title_time">Time(*):</string>
-    <string name="hint_input_note">Note</string>
+    <string name="hint_input_note">Name of Obvervation</string>
     <string name="title_add_task_screen">Create new task</string>
     <string name="title_update_task_screen">Update task</string>
     <string name="hint_input_date">dd/MM/YYYY</string>
     <string name="hint_input_time">HH/mm</string>
     <string name="title_button_save">Save</string>
-    <string name="validate_form_input_parking">Error validate input form</string>
+    <string name="validate_form_input_parking">Error validate input parking</string>
     <string name="general_level">Level %1$d</string>
     <string name="general_distance">%1$skm</string>
 </resources>

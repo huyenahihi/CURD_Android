@@ -235,7 +235,7 @@ public class DetailParkingActivity extends AppCompatActivity implements View.OnC
                 String location = editTextLocation.getText().toString().trim();
                 String height = editTextLength.getText().toString().trim();
                 if (TextUtils.isEmpty(name) || TextUtils.isEmpty(email) || TextUtils.isEmpty(location) || TextUtils.isEmpty(height) || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                    Toast.makeText(DetailParkingActivity.this, R.string.validate_form_input_task, Toast.LENGTH_LONG).show();
+                    Toast.makeText(DetailParkingActivity.this, R.string.validate_form_input_parking, Toast.LENGTH_LONG).show();
                 } else {
                     parking = new Parking();
                     parking.setName(name);
