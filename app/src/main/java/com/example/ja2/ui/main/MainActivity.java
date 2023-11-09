@@ -37,11 +37,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private final int DISPLAY_NORMAL = 0;
     private final int DISPLAY_SEARCH = 1;
+    private final int DISPLAY_RESULT_DATA = 0;
+    private final int DISPLAY_RESULT_EMPTY = 1;
     private final ArrayList<Hike> hikeArrayList = new ArrayList<>();
+    private final Handler mHandler = new Handler();
     private ViewFlipper viewFlipper = null;
+    private ViewFlipper viewFlipperResult = null;
     private EditText editTextQuery = null;
-    private HikeAdapter adapter;
-    private RecyclerView recyclerView;
+    private HikeAdapter adapter = null;
+    private RecyclerView recyclerView = null;
     //Màn nhận kết quả khi màn detailparking được add/edit/delete thành công dữ liệu
     ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         if (result.getResultCode() == Activity.RESULT_OK) {
@@ -62,16 +66,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 adapter.updatePosition(position, hike);
                 Toast.makeText(MainActivity.this, R.string.toast_message_update_hike_successful, Toast.LENGTH_LONG).show();
             }
+            showDataResult();
         }
     });
+    private FloatingActionButton floatingActionButton = null;
     private DatabaseHelper db;
-    private Handler mHandler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         viewFlipper = findViewById(R.id.view_flipper);
+        viewFlipperResult = findViewById(R.id.view_flipper_result);
+        floatingActionButton = findViewById(R.id.floating_action_button_add);
         editTextQuery = findViewById(R.id.edit_text_query);
         editTextQuery.addTextChangedListener(new TextWatcher() {
             @Override
@@ -84,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mHandler.postDelayed(() -> {
                     String keyword = s.toString().trim();
                     ArrayList mDataSearch = null;
-                    if(!TextUtils.isEmpty(keyword)) {
+                    if (!TextUtils.isEmpty(keyword)) {
                         Log.e("Tag", "--- search key: " + keyword);
                         mDataSearch = db.searchHike(keyword);
                     } else {
@@ -95,6 +102,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         imm.hideSoftInputFromWindow(editTextQuery.getWindowToken(), 0);
                     }
                     adapter.submitData(mDataSearch);
+                    showDataResult();
                 }, 250);
             }
 
@@ -106,32 +114,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         recyclerView = findViewById(R.id.recycler_view_hike);
         db = new DatabaseHelper(this);
         hikeArrayList.addAll(db.getListHike());
-        //gắn dữ liệu để đưa lên listview
         adapter = new HikeAdapter(hikeArrayList, MainActivity.this);
-        recyclerView.setItemAnimator(new DefaultItemAnimator()); //hiển thị animation
-        recyclerView.setAdapter(adapter); //
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(view -> {
-            Intent intent = new Intent(MainActivity.this, DetailHikeActivity.class);
-            mStartForResult.launch(intent);
-        });
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(adapter);
+        showDataResult();
     }
 
-//    // Menu bar
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.menu_main, menu);
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-//        int id = item.getItemId();
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
+    private void showDataResult() {
+        if (adapter.getItemCount() == 0) {
+            viewFlipperResult.setDisplayedChild(DISPLAY_RESULT_EMPTY);
+        } else {
+            viewFlipperResult.setDisplayedChild(DISPLAY_RESULT_DATA);
+        }
+    }
 
     @Override
     public void onItemClickListener(int position, Hike hike) {
@@ -144,13 +139,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    public void onClick(View view) { //display search ở màn Main
-        if (view.getId() == R.id.image_view_search) {
-            editTextQuery.setFocusable(true);
-            InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
-            editTextQuery.requestFocus();
-            imm.showSoftInput(editTextQuery, InputMethodManager.SHOW_IMPLICIT);
-            viewFlipper.setDisplayedChild(DISPLAY_SEARCH);
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.image_view_search: {
+                editTextQuery.setFocusable(true);
+                InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+                editTextQuery.requestFocus();
+                imm.showSoftInput(editTextQuery, InputMethodManager.SHOW_IMPLICIT);
+                viewFlipper.setDisplayedChild(DISPLAY_SEARCH);
+                break;
+            }
+            case R.id.floating_action_button_add:
+            case R.id.button_add: {
+                Intent intent = new Intent(MainActivity.this, DetailHikeActivity.class);
+                mStartForResult.launch(intent);
+                break;
+            }
         }
     }
 }

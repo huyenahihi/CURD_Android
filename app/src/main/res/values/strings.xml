@@ -39,4 +39,6 @@
     <string name="validate_form_input_hike">Error validate input hike</string>
     <string name="general_level">Level %1$d</string>
     <string name="general_distance">%1$skm</string>
+    <string name="message_not_found_data_result">Not yet data result\nPlease add data Hike</string>
+    <string name="button_add">Add Hike</string>
 </resources>
